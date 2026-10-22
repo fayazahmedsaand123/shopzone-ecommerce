@@ -6,13 +6,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 
 // ── Public ────────────────────────────────────────
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/search', [ProductController::class, 'search'])->name('products.search');
 
 
 require __DIR__.'/auth.php';
@@ -56,4 +54,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/search', [ProductController::class, 'search'])->name('products.search');
 });
