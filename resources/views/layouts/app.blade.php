@@ -1,36 +1,168 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'ShopZone — Pakistan\'s Online Store')</title>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    {{-- Bootstrap 5 --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    {{-- Bootstrap Icons --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    {{-- Our CSS --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    @stack('styles')
+</head>
+<body>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    @include('layouts.partials.navbar')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+    {{-- Flash Messages --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show m-0 rounded-0" role="alert">
+            <div class="container">
+                <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         </div>
-    </body>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show m-0 rounded-0" role="alert">
+            <div class="container">
+                <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
+
+    {{-- Main Content --}}
+    <main>
+        @yield('content')
+    </main>
+
+    {{-- Footer --}}
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="navbar-brand-text mb-3">Shop<span style="color:var(--accent)">Zone</span></h5>
+                    <p style="font-size:13px;">Pakistan's trusted online shopping destination. Quality products, great prices.</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6>Quick Links</h6>
+                    <a href="{{ route('home') }}">Home</a>
+                    <a href="#">All Products</a>
+                    <a href="#">New Arrivals</a>
+                    <a href="#">Best Sellers</a>
+                    <a href="#">Deals & Offers</a>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6>Customer Service</h6>
+                    <a href="#">My Account</a>
+                    <a href="#">Order History</a>
+                    <a href="#">Track Order</a>
+                    <a href="#">Returns & Refunds</a>
+                    <a href="#">Help & Contact</a>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6>Policies</h6>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Shipping Policy</a>
+                    <a href="#">FAQ</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6>Newsletter</h6>
+                    <p style="font-size:13px;">Get the latest deals and offers.</p>
+                    <div class="input-group mt-2">
+                        <input type="email" class="form-control form-control-sm" placeholder="Your email">
+                        <button class="btn btn-primary btn-sm">Subscribe</button>
+                    </div>
+                    <div class="mt-3">
+                        <small><i class="bi bi-telephone me-1"></i>0300-0000000</small><br>
+                        <small><i class="bi bi-envelope me-1"></i>support@shopzone.pk</small>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p class="mb-0">&copy; {{ date('Y') }} ShopZone. All rights reserved. | Made with <i class="bi bi-heart-fill text-danger"></i> in Pakistan</p>
+            </div>
+        </div>
+    </footer>
+
+    {{-- Toast Notification --}}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="main-toast" class="toast align-items-center text-white border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body" id="toast-message"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Bootstrap JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- jQuery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+    // ── CSRF Setup ────────────────────────────
+    $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    });
+
+    // ── Toast Helper ──────────────────────────
+    function showToast(message, type = 'success') {
+        const toast = $('#main-toast');
+        toast.removeClass('bg-success bg-danger bg-warning');
+        toast.addClass(type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-warning');
+        $('#toast-message').text(message);
+        new bootstrap.Toast(toast[0], { delay: 3000 }).show();
+    }
+
+    // ── AJAX Live Search ──────────────────────
+    let searchTimer;
+    $('#search-input').on('input', function () {
+        clearTimeout(searchTimer);
+        const query = $(this).val().trim();
+        if (query.length < 2) {
+            $('#search-suggestions').hide();
+            return;
+        }
+        searchTimer = setTimeout(function () {
+            // Will connect to real endpoint in Phase 6
+            $('#search-suggestions').html('<div class="suggestion-empty"><i class="bi bi-search me-1"></i>Searching...</div>').show();
+        }, 300);
+    });
+
+    // Hide suggestions when clicking outside
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('#search-container').length) {
+            $('#search-suggestions').hide();
+        }
+    });
+
+    // ── Search Button ─────────────────────────
+    $('#search-btn').on('click', function () {
+        const q = $('#search-input').val().trim();
+        if (q.length > 0) {
+            window.location.href = '/?search=' + encodeURIComponent(q);
+        }
+    });
+
+    // ── Mobile Menu Toggle ────────────────────
+    $('#mobile-menu-btn').on('click', function () {
+        $('#mobile-search-bar').slideToggle(200);
+    });
+    </script>
+
+    @stack('scripts')
+</body>
 </html>
