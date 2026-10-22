@@ -59,4 +59,25 @@ class User extends Authenticatable
         }
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=0D6EFD&color=fff&size=40';
     }
+
+    // Relationships
+    public function orders() { 
+        return $this->hasMany(Order::class); 
+    }
+    
+    public function addresses() { 
+        return $this->hasMany(Address::class); 
+    }
+
+    public function wishlist() { 
+        return $this->hasMany(Wishlist::class); 
+    }
+
+    public function cart() { 
+        return $this->hasMany(Cart::class); 
+    }
+
+    public function reviews() { 
+        return $this->hasMany(Review::class); 
+    }
 }
