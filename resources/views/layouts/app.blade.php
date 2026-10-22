@@ -113,54 +113,88 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <script>
+
     // ── CSRF Setup ────────────────────────────
-    $.ajaxSetup({
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-    });
+$.ajaxSetup({
+    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+});
 
-    // ── Toast Helper ──────────────────────────
-    function showToast(message, type = 'success') {
-        const toast = $('#main-toast');
-        toast.removeClass('bg-success bg-danger bg-warning');
-        toast.addClass(type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-warning');
-        $('#toast-message').text(message);
-        new bootstrap.Toast(toast[0], { delay: 3000 }).show();
+// ── Toast Helper ──────────────────────────
+function showToast(message, type = 'success') {
+    const toast = $('#main-toast');
+    toast.removeClass('bg-success bg-danger bg-warning');
+    toast.addClass(type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-warning');
+    $('#toast-message').text(message);
+    new bootstrap.Toast(toast[0], { delay: 3000 }).show();
+}
+
+// ── AJAX Live Search ──────────────────────
+let searchTimer;
+$('#search-input').on('input', function () {
+    clearTimeout(searchTimer);
+    const query = $(this).val().trim();
+    const box   = $('#search-suggestions');
+
+    if (query.length < 2) { box.hide(); return; }
+
+    box.html('<div class="suggestion-empty"><i class="bi bi-hourglass-split me-1"></i>Searching...</div>').show();
+
+    searchTimer = setTimeout(function () {
+        $.get('{{ route("products.search") }}', { q: query }, function (data) {
+            if (!data.length) {
+                box.html('<div class="suggestion-empty"><i class="bi bi-inbox me-1"></i>No products found.</div>');
+                return;
+            }
+            let html = '';
+            data.forEach(function (p) {
+                html += `
+                <div class="suggestion-item" onclick="window.location='${p.url}'">
+                    <img src="${p.image}" alt="${p.name}">
+                    <div>
+                        <div class="s-name">${p.name}</div>
+                        <div class="s-price">PKR ${p.price}</div>
+                        <div style="font-size:11px;color:#999;">${p.category}</div>
+                    </div>
+                </div>`;
+            });
+            html += `<div class="suggestion-item justify-content-center text-primary fw-semibold"
+                onclick="window.location='{{ route('products.index') }}?search=${encodeURIComponent(query)}'">
+                <i class="bi bi-search me-2"></i>See all results for "${query}"
+            </div>`;
+            box.html(html);
+        });
+    }, 300);
+});
+
+// Hide suggestions on outside click
+$(document).on('click', function (e) {
+    if (!$(e.target).closest('#search-container').length) {
+        $('#search-suggestions').hide();
     }
+});
 
-    // ── AJAX Live Search ──────────────────────
-    let searchTimer;
-    $('#search-input').on('input', function () {
-        clearTimeout(searchTimer);
-        const query = $(this).val().trim();
-        if (query.length < 2) {
-            $('#search-suggestions').hide();
-            return;
-        }
-        searchTimer = setTimeout(function () {
-            // Will connect to real endpoint in Phase 6
-            $('#search-suggestions').html('<div class="suggestion-empty"><i class="bi bi-search me-1"></i>Searching...</div>').show();
-        }, 300);
-    });
+// Search button
+$('#search-btn').on('click', function () {
+    const q = $('#search-input').val().trim();
+    if (q.length > 0) {
+        window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(q);
+    }
+});
 
-    // Hide suggestions when clicking outside
-    $(document).on('click', function (e) {
-        if (!$(e.target).closest('#search-container').length) {
-            $('#search-suggestions').hide();
-        }
-    });
-
-    // ── Search Button ─────────────────────────
-    $('#search-btn').on('click', function () {
-        const q = $('#search-input').val().trim();
+// Enter key search
+$('#search-input').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        const q = $(this).val().trim();
         if (q.length > 0) {
-            window.location.href = '/?search=' + encodeURIComponent(q);
+            window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(q);
         }
-    });
+    }
+});
 
-    // ── Mobile Menu Toggle ────────────────────
-    $('#mobile-menu-btn').on('click', function () {
-        $('#mobile-search-bar').slideToggle(200);
-    });
+// Mobile menu
+$('#mobile-menu-btn').on('click', function () {
+    $('#mobile-search-bar').slideToggle(200);
+});
     </script>
 
     @stack('scripts')
