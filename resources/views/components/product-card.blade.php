@@ -2,8 +2,8 @@
 
 @php
     $image = $product->main_image
-        ? asset('storage/' . $product->main_image)
-        : 'https://placehold.co/300x300/f0f4ff/0d6efd?text=' . urlencode($product->name);
+    ? asset('storage/' . $product->main_image)
+    : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80';
     $currentPrice = $product->sale_price ?? $product->price;
     $discount = $product->sale_price
         ? round((($product->price - $product->sale_price) / $product->price) * 100)
