@@ -228,3 +228,179 @@ body {
     .navbar-brand-text { font-size: 20px; }
     .top-bar { display: none; }
 }
+
+/* ── Product Card ────────────────────────── */
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all .25s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.product-card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    transform: translateY(-4px);
+}
+.product-img-wrap {
+    position: relative;
+    overflow: hidden;
+    background: #f8f9fa;
+    aspect-ratio: 1;
+}
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s;
+}
+.product-card:hover .product-img { transform: scale(1.06); }
+
+.product-badges {
+    position: absolute;
+    top: 10px; left: 10px;
+    display: flex; flex-direction: column; gap: 4px;
+    z-index: 2;
+}
+.badge-sale    { background: #dc3545; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+.badge-featured{ background: var(--primary); color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 4px; }
+.badge-out     { background: #6c757d; color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 4px; }
+
+.product-actions {
+    position: absolute;
+    top: 10px; right: 10px;
+    display: flex; flex-direction: column; gap: 6px;
+    opacity: 0; transform: translateX(10px);
+    transition: all .25s;
+    z-index: 2;
+}
+.product-card:hover .product-actions { opacity: 1; transform: translateX(0); }
+.action-btn {
+    width: 34px; height: 34px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 15px; color: #555;
+    transition: all .2s;
+}
+.action-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.product-info { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+.product-category { font-size: 11px; color: var(--primary); text-transform: uppercase; font-weight: 600; letter-spacing: .5px; margin-bottom: 4px; }
+.product-name { font-size: 14px; font-weight: 600; color: #222; margin-bottom: 6px; line-height: 1.4; flex: 1; }
+.product-rating { margin-bottom: 8px; }
+.product-price { margin-bottom: 12px; }
+.current-price { font-size: 16px; font-weight: 800; color: var(--accent); }
+.old-price { font-size: 13px; color: #aaa; text-decoration: line-through; margin-left: 6px; }
+
+.btn-add-cart {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+}
+.btn-add-cart:hover:not(:disabled) { background: var(--primary-dark); }
+.btn-add-cart:disabled { background: #adb5bd; cursor: not-allowed; }
+
+/* ── Hero Banner ─────────────────────────── */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0d6efd 100%);
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-section::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: rgba(255,107,53,.15);
+    border-radius: 50%;
+    right: -100px; top: -100px;
+}
+.hero-section::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: rgba(13,110,253,.2);
+    border-radius: 50%;
+    right: 200px; bottom: -50px;
+}
+.hero-badge { background: var(--accent); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 16px; }
+.hero-title { font-size: 48px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 16px; }
+.hero-title span { color: var(--accent); }
+.hero-subtitle { color: rgba(255,255,255,.8); font-size: 17px; margin-bottom: 28px; }
+.hero-img { border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.4); max-height: 380px; object-fit: cover; }
+
+/* ── Section Styles ──────────────────────── */
+.section-header { margin-bottom: 32px; }
+.section-title { font-size: 26px; font-weight: 800; color: var(--dark); position: relative; padding-bottom: 12px; }
+.section-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background: var(--primary); border-radius: 2px; }
+.section-subtitle { color: #777; font-size: 14px; margin-top: 8px; }
+
+/* ── Category Card ───────────────────────── */
+.category-card {
+    text-align: center;
+    cursor: pointer;
+    padding: 16px 8px;
+    border-radius: 12px;
+    transition: all .25s;
+    text-decoration: none;
+    display: block;
+    color: #333;
+}
+.category-card:hover { background: #f0f4ff; color: var(--primary); transform: translateY(-3px); }
+.category-icon-wrap {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f0f4ff, #dde8ff);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 32px;
+    color: var(--primary);
+    transition: all .25s;
+    border: 2px solid transparent;
+}
+.category-card:hover .category-icon-wrap { background: var(--primary); color: #fff; border-color: var(--primary); }
+.category-card-name { font-size: 13px; font-weight: 600; }
+.category-card-count { font-size: 11px; color: #999; }
+
+/* ── Promo Banner ────────────────────────── */
+.promo-banner {
+    border-radius: 16px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+}
+.promo-banner h4 { font-weight: 800; margin-bottom: 6px; }
+
+/* ── Brand Logo ──────────────────────────── */
+.brand-logo-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    transition: all .2s;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #555;
+    font-size: 15px;
+}
+.brand-logo-card:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 4px 15px rgba(13,110,253,.1); }

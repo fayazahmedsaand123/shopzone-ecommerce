@@ -8,9 +8,8 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ProductController;
 
 // ── Public ────────────────────────────────────────
-Route::get('/', function () {
-    return view('store.home');
-})->name('home');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 require __DIR__.'/auth.php';
 
