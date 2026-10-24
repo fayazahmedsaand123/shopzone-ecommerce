@@ -98,9 +98,9 @@
                     </span>
                 </div>
 
-                <a href="#" class="btn btn-primary w-100 btn-lg fw-bold">
-                    <i class="bi bi-lock me-2"></i>Proceed to Checkout
-                </a>
+                <a href="{{ route('customer.checkout') }}" class="btn btn-primary w-100 btn-lg fw-bold">
+    <i class="bi bi-lock me-2"></i>Proceed to Checkout
+</a>
 
                 <div class="text-center mt-3">
                     <small class="text-muted">
