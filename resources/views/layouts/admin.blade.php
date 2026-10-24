@@ -139,7 +139,7 @@
         </a>
 
         <div class="sidebar-label">Sales</div>
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('admin.orders.index') }}" class="sidebar-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
             <i class="bi bi-bag"></i> Orders
         </a>
         <a href="#" class="sidebar-link">
