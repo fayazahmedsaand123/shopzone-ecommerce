@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
@@ -9,9 +10,9 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 
 // ── Public ────────────────────────────────────────
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/search', [ProductController::class, 'search'])->name('products.search');
 
 require __DIR__.'/auth.php';
 
@@ -48,12 +49,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
 
     // Products
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/search', [ProductController::class, 'search'])->name('products.search');
+    Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
 });
