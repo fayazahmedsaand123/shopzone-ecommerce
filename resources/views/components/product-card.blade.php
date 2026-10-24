@@ -2,8 +2,8 @@
 
 @php
     $image = $product->main_image
-    ? asset('storage/' . $product->main_image)
-    : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80';
+        ? asset('storage/' . $product->main_image)
+        : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80';
     $currentPrice = $product->sale_price ?? $product->price;
     $discount = $product->sale_price
         ? round((($product->price - $product->sale_price) / $product->price) * 100)
@@ -12,6 +12,7 @@
 
 <div class="product-card">
     <div class="product-img-wrap">
+
         {{-- Badges --}}
         <div class="product-badges">
             @if($discount > 0)
@@ -29,7 +30,8 @@
 
         {{-- Hover Actions --}}
         <div class="product-actions">
-            <button class="action-btn" title="Add to Wishlist">
+            <button class="action-btn wishlist-btn" title="Add to Wishlist"
+                data-product-id="{{ $product->id }}">
                 <i class="bi bi-heart"></i>
             </button>
             <button class="action-btn" title="Quick View">
@@ -61,6 +63,7 @@
             @endif
         </div>
 
+        {{-- Single Add to Cart Button --}}
         <button class="btn-add-cart {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}"
             data-product-id="{{ $product->id }}"
             {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}>

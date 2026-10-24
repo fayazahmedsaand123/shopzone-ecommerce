@@ -119,6 +119,55 @@ $.ajaxSetup({
     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
 });
 
+// ── Add to Cart ───────────────────────────
+$(document).on('click', '.btn-add-cart:not(:disabled)', function () {
+    const productId = $(this).data('product-id');
+    const btn = $(this);
+
+    @auth
+    btn.prop('disabled', true).html('<i class="bi bi-hourglass-split me-1"></i>Adding...');
+
+    $.post('{{ route("customer.cart.add") }}', { product_id: productId }, function (res) {
+        if (res.success) {
+            $('#cart-count').text(res.cart_count);
+            showToast(res.message);
+            btn.html('<i class="bi bi-check-lg me-1"></i>Added!');
+            setTimeout(() => btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i>Add to Cart'), 1500);
+        } else {
+            showToast(res.message, 'error');
+            btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i>Add to Cart');
+            if (res.redirect) window.location.href = res.redirect;
+        }
+    });
+    @else
+    showToast('Please login to add items to cart.', 'error');
+    setTimeout(() => window.location.href = '{{ route("login") }}', 1000);
+    @endauth
+});
+
+// ── Wishlist Toggle ───────────────────────
+$(document).on('click', '.wishlist-btn', function () {
+    const productId = $(this).data('product-id');
+    const btn = $(this);
+
+    @auth
+    $.post('{{ route("customer.wishlist.toggle") }}', { product_id: productId }, function (res) {
+        if (res.success) {  
+            $('#wishlist-count').text(res.wishlist_count);
+            showToast(res.message);
+            if (res.action === 'added') {
+                btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+            } else {
+                btn.find('i').removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+            }
+        }
+    });
+    @else
+    showToast('Please login to use wishlist.', 'error');
+    setTimeout(() => window.location.href = '{{ route("login") }}', 1000);
+    @endauth
+});
+
 // ── Toast Helper ──────────────────────────
 function showToast(message, type = 'success') {
     const toast = $('#main-toast');
@@ -195,6 +244,7 @@ $('#search-input').on('keydown', function (e) {
 $('#mobile-menu-btn').on('click', function () {
     $('#mobile-search-bar').slideToggle(200);
 });
+
     </script>
 
     @stack('scripts')
