@@ -151,4 +151,38 @@ class ProductController extends Controller {
 
         return response()->json($products);
     }
+
+    public function bestSellers() {
+        $products = Product::with(['category','brand'])
+            ->where('status','active')
+            ->orderBy('views_count','desc')
+            ->paginate(12);
+
+        $categories = Category::where('status','active')->withCount('products')->get();
+        $brands     = Brand::where('status','active')->get();
+        $pageTitle  = 'Best Sellers';
+
+        return view('store.products', compact('products','categories','brands','pageTitle'));
+    }
+
+    public function newArrivals() {
+        $products = Product::with(['category','brand'])
+            ->where('status','active')
+            ->latest()
+            ->paginate(12);
+
+        $categories = Category::where('status','active')->withCount('products')->get();
+        $brands     = Brand::where('status','active')->get();
+        $pageTitle  = 'New Arrivals';
+
+        return view('store.products', compact('products','categories','brands','pageTitle'));
+    }
+
+    public function brands() {
+        $brands = \App\Models\Brand::where('status','active')
+            ->withCount('products')
+            ->get();
+
+        return view('store.brands', compact('brands'));
+    }
 }

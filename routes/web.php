@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -17,12 +18,20 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/search', [ProductController::class, 'search'])->name('products.search');
+
 // Guest trying to add to cart — redirect to login
 Route::post('/cart/add', function() {
     return response()->json(['success' => false, 'message' => 'Please login to add items to cart.', 'redirect' => route('login')]);
 })->name('cart.add.guest')->middleware('guest');
+
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products/{product:slug}/review', [ProductController::class, 'review'])->name('products.review');
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/brands', [ProductController::class, 'brands'])->name('brands.index');
+Route::get('/best-sellers', [ProductController::class, 'bestSellers'])->name('best-sellers');
+Route::get('/new-arrivals', [ProductController::class, 'newArrivals'])->name('new-arrivals');
 
 require __DIR__.'/auth.php';
 

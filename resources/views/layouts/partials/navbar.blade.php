@@ -161,22 +161,26 @@
                    href="{{ route('products.index') }}">All Products</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('products.index') }}?sort=newest">New Arrivals</a>
+                <a class="nav-link {{ request()->routeIs('new-arrivals') ? 'active' : '' }}"
+                   href="{{ route('new-arrivals') }}">New Arrivals</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('products.index') }}?sort=popular">Best Sellers</a>
+                <a class="nav-link {{ request()->routeIs('best-sellers') ? 'active' : '' }}"
+                   href="{{ route('best-sellers') }}">Best Sellers</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('products.index') }}?sale=1"
+                <a class="nav-link" href="{{ route('products.index') }}"
                    style="color:#ffd700 !important;font-weight:700;">
                     <i class="bi bi-lightning-fill me-1"></i>Deals & Offers
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('products.index') }}">Brands</a>
+                <a class="nav-link {{ request()->routeIs('brands.index') ? 'active' : '' }}"
+                   href="{{ route('brands.index') }}">Brands</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Contact Us</a>
+                <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}"
+                   href="{{ route('contact') }}">Contact Us</a>
             </li>
         </ul>
     </div>
