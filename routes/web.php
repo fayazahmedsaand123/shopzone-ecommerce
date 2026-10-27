@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
-// ── Public ────────────────────────────────────────
+// Public
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/search', [ProductController::class, 'search'])->name('products.search');
@@ -42,7 +42,7 @@ Route::get('/faq', fn() => view('store.faq'))->name('faq');
 
 require __DIR__.'/auth.php';
 
-// ── Customer ──────────────────────────────────────
+// Customer 
 Route::middleware(['auth', 'customer'])->prefix('account')->name('customer.')->group(function () {
     Route::get('/dashboard', function () {
         return view('customer.dashboard');
@@ -69,7 +69,7 @@ Route::middleware(['auth', 'customer'])->prefix('account')->name('customer.')->g
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-// ── Admin ─────────────────────────────────────────
+// Admin 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
