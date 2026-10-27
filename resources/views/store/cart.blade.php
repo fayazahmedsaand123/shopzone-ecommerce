@@ -99,8 +99,8 @@
                 </div>
 
                 <a href="{{ route('customer.checkout') }}" class="btn btn-primary w-100 btn-lg fw-bold">
-    <i class="bi bi-lock me-2"></i>Proceed to Checkout
-</a>
+                    <i class="bi bi-lock me-2"></i>Proceed to Checkout
+                </a>
 
                 <div class="text-center mt-3">
                     <small class="text-muted">
@@ -128,60 +128,60 @@
 
 @push('scripts')
 <script>
-// Quantity update
-$(document).on('click', '.qty-btn', function () {
-    const cartId = $(this).data('cart-id');
-    const action = $(this).data('action');
-    const max    = $(this).data('max') || 999;
-    let qty      = parseInt($('#qty-' + cartId).text());
+    // Quantity update
+    $(document).on('click', '.qty-btn', function () {
+        const cartId = $(this).data('cart-id');
+        const action = $(this).data('action');
+        const max    = $(this).data('max') || 999;
+        let qty      = parseInt($('#qty-' + cartId).text());
 
-    if (action === 'increase') {
-        if (qty >= max) { showToast('Not enough stock.', 'error'); return; }
-        qty++;
-    } else {
-        if (qty <= 1) return;
-        qty--;
-    }
-
-    $.ajax({
-        url: '/account/cart/' + cartId,
-        type: 'PATCH',
-        data: { quantity: qty },
-        success: function (res) {
-            if (res.success) {
-                $('#qty-' + cartId).text(qty);
-                $('#item-total-' + cartId).text(res.item_total);
-                $('#cart-subtotal').text(res.subtotal);
-                $('#cart-count').text(res.cart_count);
-            } else {
-                showToast(res.message, 'error');
-            }
+        if (action === 'increase') {
+            if (qty >= max) { showToast('Not enough stock.', 'error'); return; }
+            qty++;
+        } else {
+            if (qty <= 1) return;
+            qty--;
         }
-    });
-});
 
-// Remove item
-$(document).on('click', '.remove-btn', function () {
-    const cartId = $(this).data('cart-id');
-    if (!confirm('Remove this item from cart?')) return;
-
-    $.ajax({
-        url: '/account/cart/' + cartId,
-        type: 'DELETE',
-        success: function (res) {
-            if (res.success) {
-                $('#cart-row-' + cartId).fadeOut(300, function () {
-                    $(this).remove();
-                    if ($('#cart-table tbody tr').length === 0) {
-                        location.reload();
-                    }
-                });
-                $('#cart-subtotal').text(res.subtotal);
-                $('#cart-count').text(res.cart_count);
-                showToast(res.message);
+        $.ajax({
+            url: '/account/cart/' + cartId,
+            type: 'PATCH',
+            data: { quantity: qty },
+            success: function (res) {
+                if (res.success) {
+                    $('#qty-' + cartId).text(qty);
+                    $('#item-total-' + cartId).text(res.item_total);
+                    $('#cart-subtotal').text(res.subtotal);
+                    $('#cart-count').text(res.cart_count);
+                } else {
+                    showToast(res.message, 'error');
+                }
             }
-        }
+        });
     });
-});
+
+    // Remove item
+    $(document).on('click', '.remove-btn', function () {
+        const cartId = $(this).data('cart-id');
+        if (!confirm('Remove this item from cart?')) return;
+
+        $.ajax({
+            url: '/account/cart/' + cartId,
+            type: 'DELETE',
+            success: function (res) {
+                if (res.success) {
+                    $('#cart-row-' + cartId).fadeOut(300, function () {
+                        $(this).remove();
+                        if ($('#cart-table tbody tr').length === 0) {
+                            location.reload();
+                        }
+                    });
+                    $('#cart-subtotal').text(res.subtotal);
+                    $('#cart-count').text(res.cart_count);
+                    showToast(res.message);
+                }
+            }
+        });
+    });
 </script>
 @endpush

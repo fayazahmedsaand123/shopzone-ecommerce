@@ -2,10 +2,13 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
-{
+class Payment extends Model {
+
     protected $fillable = ['order_id','payment_method','transaction_id','amount','status','notes'];
+
     protected $casts = ['amount' => 'decimal:2'];
 
-    public function order() { return $this->belongsTo(Order::class); }
+    public function order() { 
+        return $this->belongsTo(Order::class); 
+    }
 }

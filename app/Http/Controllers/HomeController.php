@@ -6,10 +6,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Brand;
 
-class HomeController extends Controller
-{
-    public function index()
-    {
+class HomeController extends Controller {
+    public function index() {
         $categories = Category::where('status', 'active')
             ->whereNull('parent_id')
             ->withCount('products')

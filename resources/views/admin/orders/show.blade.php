@@ -120,30 +120,30 @@
 @endsection
 
 @push('scripts')
-<script>
-$('#update-status-btn').on('click', function () {
-    const status  = $('#new-status').val();
-    const comment = $('#status-comment').val();
-    const btn     = $(this);
+    <script>
+        $('#update-status-btn').on('click', function () {
+            const status  = $('#new-status').val();
+            const comment = $('#status-comment').val();
+            const btn     = $(this);
 
-    btn.prop('disabled', true).text('Updating...');
+            btn.prop('disabled', true).text('Updating...');
 
-    $.ajax({
-        url: '{{ route("admin.orders.updateStatus", $order) }}',
-        type: 'PATCH',
-        data: { status: status, comment: comment },
-        success: function (res) {
-            if (res.success) {
-                showToast(res.message);
-                $('#status-result').html(
-                    '<div class="alert alert-success py-2 mb-0">' + res.message + '</div>'
-                );
-                setTimeout(() => location.reload(), 1000);
-            }
-        },
-        error: function () { showToast('Update failed.', 'error'); },
-        complete: function () { btn.prop('disabled', false).text('Update'); }
-    });
-});
-</script>
+            $.ajax({
+                url: '{{ route("admin.orders.updateStatus", $order) }}',
+                type: 'PATCH',
+                data: { status: status, comment: comment },
+                success: function (res) {
+                    if (res.success) {
+                        showToast(res.message);
+                        $('#status-result').html(
+                            '<div class="alert alert-success py-2 mb-0">' + res.message + '</div>'
+                        );
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                },
+                error: function () { showToast('Update failed.', 'error'); },
+                complete: function () { btn.prop('disabled', false).text('Update'); }
+            });
+        });
+    </script>
 @endpush

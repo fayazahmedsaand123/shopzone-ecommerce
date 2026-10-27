@@ -3,7 +3,7 @@
 
 @section('content')
 
-{{-- ── HERO BANNER ──────────────────────────── --}}
+{{-- HERO BANNER --}}
 <section class="hero-section">
     <div class="container position-relative" style="z-index:1;">
         <div class="row align-items-center">
@@ -47,7 +47,7 @@
     </div>
 </section>
 
-{{-- ── TRUST BAR ────────────────────────────── --}}
+{{-- TRUST BAR --}}
 <div style="background:#fff;border-bottom:1px solid #e9ecef;">
     <div class="container">
         <div class="row text-center py-3">
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-{{-- ── CATEGORIES ───────────────────────────── --}}
+{{-- CATEGORIES --}}
 <section class="py-5" id="categories" style="background:#f8f9fa;">
     <div class="container">
         <div class="section-header d-flex justify-content-between align-items-end">
@@ -123,7 +123,7 @@
     </div>
 </section>
 
-{{-- ── FEATURED PRODUCTS ────────────────────── --}}
+{{-- FEATURED PRODUCTS --}}
 @if($featured_products->count())
 <section class="py-5" id="featured">
     <div class="container">
@@ -145,7 +145,7 @@
 </section>
 @endif
 
-{{-- ── PROMO BANNERS ────────────────────────── --}}
+{{-- PROMO BANNERS --}}
 <section class="py-4" style="background:#f8f9fa;">
     <div class="container">
         <div class="row g-3">
@@ -173,7 +173,7 @@
     </div>
 </section>
 
-{{-- ── NEW ARRIVALS ──────────────────────────── --}}
+{{-- NEW ARRIVALS --}}
 @if($new_arrivals->count())
 <section class="py-5">
     <div class="container">
@@ -195,7 +195,7 @@
 </section>
 @endif
 
-{{-- ── BRANDS ───────────────────────────────── --}}
+{{-- BRANDS --}}
 @if($brands->count())
 <section class="py-5" style="background:#f8f9fa;">
     <div class="container">
@@ -219,7 +219,7 @@
 </section>
 @endif
 
-{{-- ── BEST SELLERS ──────────────────────────── --}}
+{{-- BEST SELLERS --}}
 @if($best_sellers->count())
 <section class="py-5">
     <div class="container">
@@ -241,7 +241,7 @@
 </section>
 @endif
 
-{{-- ── NEWSLETTER ───────────────────────────── --}}
+{{-- NEWSLETTER --}}
 <section class="py-5" style="background:linear-gradient(135deg,#1a1a2e,#0d6efd);">
     <div class="container text-center">
         <div class="row justify-content-center">

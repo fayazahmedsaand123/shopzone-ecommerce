@@ -32,7 +32,7 @@
 
     <div class="row g-4">
 
-        {{-- ── Sidebar Filters ── --}}
+        {{-- Sidebar Filters --}}
         <div class="col-lg-3">
             <form method="GET" action="{{ route('products.index') }}" id="filter-form">
                 <input type="hidden" name="search" value="{{ request('search') }}">
@@ -104,7 +104,7 @@
             </form>
         </div>
 
-        {{-- ── Products Grid ── --}}
+        {{-- Products Grid --}}
         <div class="col-lg-9">
             @if($products->count())
                 <div class="row row-cols-2 row-cols-md-3 g-3" id="products-grid">
@@ -134,10 +134,10 @@
 
 @push('scripts')
 <script>
-// Auto-submit on sort change
-$('#sort-select').on('change', function() {
-    $('input[name="sort"]').val($(this).val());
-    $('#filter-form').submit();
-});
+    // Auto-submit on sort change
+    $('#sort-select').on('change', function() {
+        $('input[name="sort"]').val($(this).val());
+        $('#filter-form').submit();
+    });
 </script>
 @endpush

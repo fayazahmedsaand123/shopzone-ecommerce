@@ -8,22 +8,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-class CategoryController extends Controller
-{
-    public function index()
-    {
+class CategoryController extends Controller {
+
+    public function index() {
         $categories = Category::with('parent')->latest()->paginate(15);
         return view('admin.categories.index', compact('categories'));
     }
 
-    public function create()
-    {
+    public function create() {
         $parents = Category::where('status', 'active')->whereNull('parent_id')->get();
         return view('admin.categories.create', compact('parents'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -50,8 +47,7 @@ class CategoryController extends Controller
             ->with('success', 'Category created successfully.');
     }
 
-    public function edit(Category $category)
-    {
+    public function edit(Category $category) {
         $parents = Category::where('status', 'active')
             ->whereNull('parent_id')
             ->where('id', '!=', $category->id)
@@ -59,8 +55,7 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category', 'parents'));
     }
 
-    public function update(Request $request, Category $category)
-    {
+    public function update(Request $request, Category $category) {
         $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -84,8 +79,7 @@ class CategoryController extends Controller
             ->with('success', 'Category updated successfully.');
     }
 
-    public function destroy(Category $category)
-    {
+    public function destroy(Category $category) {
         if ($category->products()->count() > 0) {
             return response()->json(['success' => false, 'message' => 'Cannot delete category with products.']);
         }

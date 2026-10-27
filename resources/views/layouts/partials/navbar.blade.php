@@ -82,22 +82,22 @@
             <div class="d-flex align-items-center gap-1 ms-2">
 
                 {{-- Wishlist --}}
-<a href="{{ auth()->check() ? route('customer.wishlist.index') : route('login') }}" class="nav-icon-btn">
-    <i class="bi bi-heart"></i>
-    <span class="nav-badge" id="wishlist-count">
-        {{ auth()->check() ? auth()->user()->wishlist()->count() : 0 }}
-    </span>
-    <span class="d-none d-lg-block">Wishlist</span>
-</a>
+                <a href="{{ auth()->check() ? route('customer.wishlist.index') : route('login') }}" class="nav-icon-btn">
+                    <i class="bi bi-heart"></i>
+                    <span class="nav-badge" id="wishlist-count">
+                        {{ auth()->check() ? auth()->user()->wishlist()->count() : 0 }}
+                    </span>
+                    <span class="d-none d-lg-block">Wishlist</span>
+                </a>
 
-{{-- Cart --}}
-<a href="{{ auth()->check() ? route('customer.cart.index') : route('login') }}" class="nav-icon-btn">
-    <i class="bi bi-cart3"></i>
-    <span class="nav-badge" id="cart-count">
-        {{ auth()->check() ? auth()->user()->cart()->sum('quantity') : 0 }}
-    </span>
-    <span class="d-none d-lg-block">Cart</span>
-</a>
+                {{-- Cart --}}
+                <a href="{{ auth()->check() ? route('customer.cart.index') : route('login') }}" class="nav-icon-btn">
+                    <i class="bi bi-cart3"></i>
+                    <span class="nav-badge" id="cart-count">
+                        {{ auth()->check() ? auth()->user()->cart()->sum('quantity') : 0 }}
+                    </span>
+                    <span class="d-none d-lg-block">Cart</span>
+                </a>
 
                 {{-- Account --}}
                 @auth

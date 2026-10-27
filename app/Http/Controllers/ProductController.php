@@ -7,11 +7,10 @@ use App\Models\Category;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
-{
+class ProductController extends Controller {
+
     // All Products Page
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $query = Product::with(['category', 'brand'])
             ->where('status', 'active');
 
@@ -65,8 +64,7 @@ class ProductController extends Controller
     }
 
     // AJAX Live Search
-    public function search(Request $request)
-    {
+    public function search(Request $request) {
         $query = $request->get('q', '');
 
         if (strlen($query) < 2) {

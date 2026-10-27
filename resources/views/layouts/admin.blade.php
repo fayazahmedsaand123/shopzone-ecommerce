@@ -216,31 +216,31 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-$.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 
-function showToast(message, type = 'success') {
-    const toast = $('#main-toast');
-    toast.removeClass('bg-success bg-danger');
-    toast.addClass(type === 'success' ? 'bg-success' : 'bg-danger');
-    $('#toast-message').text(message);
-    new bootstrap.Toast(toast[0], { delay: 3000 }).show();
-}
+    function showToast(message, type = 'success') {
+        const toast = $('#main-toast');
+        toast.removeClass('bg-success bg-danger');
+        toast.addClass(type === 'success' ? 'bg-success' : 'bg-danger');
+        $('#toast-message').text(message);
+        new bootstrap.Toast(toast[0], { delay: 3000 }).show();
+    }
 
-function confirmDelete(url, rowId) {
-    if (!confirm('Are you sure you want to delete this item?')) return;
-    $.ajax({
-        url: url, type: 'DELETE',
-        success: function(res) {
-            if (res.success) {
-                $(rowId).fadeOut(300, function() { $(this).remove(); });
-                showToast(res.message);
-            } else {
-                showToast(res.message, 'error');
-            }
-        },
-        error: function() { showToast('Something went wrong.', 'error'); }
-    });
-}
+    function confirmDelete(url, rowId) {
+        if (!confirm('Are you sure you want to delete this item?')) return;
+        $.ajax({
+            url: url, type: 'DELETE',
+            success: function(res) {
+                if (res.success) {
+                    $(rowId).fadeOut(300, function() { $(this).remove(); });
+                    showToast(res.message);
+                } else {
+                    showToast(res.message, 'error');
+                }
+            },
+            error: function() { showToast('Something went wrong.', 'error'); }
+        });
+    }
 </script>
 @stack('scripts')
 </body>

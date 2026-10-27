@@ -8,10 +8,8 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Category;
 
-class AdminDashboardController extends Controller
-{
-    public function index()
-    {
+class AdminDashboardController extends Controller {
+    public function index() {
         $stats = [
             'total_products'  => Product::count(),
             'total_orders'    => Order::count(),

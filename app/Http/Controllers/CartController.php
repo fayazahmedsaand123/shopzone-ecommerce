@@ -6,11 +6,10 @@ use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-class CartController extends Controller
-{
+class CartController extends Controller {
+
     // Add to cart
-    public function add(Request $request)
-    {
+    public function add(Request $request) {
         $request->validate(['product_id' => 'required|exists:products,id']);
 
         $product = Product::findOrFail($request->product_id);
@@ -46,8 +45,7 @@ class CartController extends Controller
     }
 
     // View cart
-    public function index()
-    {
+    public function index() {
         $items = Cart::with('product')
             ->where('user_id', auth()->id())
             ->get();
@@ -60,8 +58,7 @@ class CartController extends Controller
     }
 
     // Update quantity via AJAX
-    public function update(Request $request, Cart $cart)
-    {
+    public function update(Request $request, Cart $cart) {
         if ($cart->user_id !== auth()->id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized.'], 403);
         }
@@ -90,8 +87,7 @@ class CartController extends Controller
     }
 
     // Remove item via AJAX
-    public function remove(Cart $cart)
-    {
+    public function remove(Cart $cart) {
         if ($cart->user_id !== auth()->id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized.'], 403);
         }

@@ -13,10 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
-class ProductController extends Controller
-{
-    public function index(Request $request)
-    {
+class ProductController extends Controller {
+
+    public function index(Request $request) {
         $query = Product::with(['category', 'brand']);
 
         if ($request->search) {
@@ -35,15 +34,13 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products', 'categories'));
     }
 
-    public function create()
-    {
+    public function create() {
         $categories = Category::where('status','active')->get();
         $brands     = Brand::where('status','active')->get();
         return view('admin.products.create', compact('categories', 'brands'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'name'              => 'required|string|max:255',
             'description'       => 'nullable|string',
@@ -115,16 +112,14 @@ class ProductController extends Controller
         }
     }
 
-    public function edit(Product $product)
-    {
+    public function edit(Product $product) {
         $categories = Category::where('status','active')->get();
         $brands     = Brand::where('status','active')->get();
         $product->load('images');
         return view('admin.products.edit', compact('product', 'categories', 'brands'));
     }
 
-    public function update(Request $request, Product $product)
-    {
+    public function update(Request $request, Product $product) {
         $request->validate([
             'name'              => 'required|string|max:255',
             'description'       => 'nullable|string',
@@ -190,8 +185,7 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy(Product $product)
-    {
+    public function destroy(Product $product) {
         if ($product->main_image) Storage::disk('public')->delete($product->main_image);
         foreach ($product->images as $img) {
             Storage::disk('public')->delete($img->image);

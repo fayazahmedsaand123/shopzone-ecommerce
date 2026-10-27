@@ -8,21 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-class BrandController extends Controller
-{
-    public function index()
-    {
+class BrandController extends Controller {
+
+    public function index() {
         $brands = Brand::latest()->paginate(15);
         return view('admin.brands.index', compact('brands'));
     }
 
-    public function create()
-    {
+    public function create() {
         return view('admin.brands.create');
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -43,13 +40,11 @@ class BrandController extends Controller
             ->with('success', 'Brand created successfully.');
     }
 
-    public function edit(Brand $brand)
-    {
+    public function edit(Brand $brand) {
         return view('admin.brands.edit', compact('brand'));
     }
 
-    public function update(Request $request, Brand $brand)
-    {
+    public function update(Request $request, Brand $brand) {
         $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -71,8 +66,7 @@ class BrandController extends Controller
             ->with('success', 'Brand updated successfully.');
     }
 
-    public function destroy(Brand $brand)
-    {
+    public function destroy(Brand $brand) {
         if ($brand->products()->count() > 0) {
             return response()->json(['success' => false, 'message' => 'Cannot delete brand with products.']);
         }

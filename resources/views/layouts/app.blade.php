@@ -114,136 +114,136 @@
 
     <script>
 
-    // ── CSRF Setup ────────────────────────────
-$.ajaxSetup({
-    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-});
-
-// ── Add to Cart ───────────────────────────
-$(document).on('click', '.btn-add-cart:not(:disabled)', function () {
-    const productId = $(this).data('product-id');
-    const btn = $(this);
-
-    @auth
-    btn.prop('disabled', true).html('<i class="bi bi-hourglass-split me-1"></i>Adding...');
-
-    $.post('{{ route("customer.cart.add") }}', { product_id: productId }, function (res) {
-        if (res.success) {
-            $('#cart-count').text(res.cart_count);
-            showToast(res.message);
-            btn.html('<i class="bi bi-check-lg me-1"></i>Added!');
-            setTimeout(() => btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i>Add to Cart'), 1500);
-        } else {
-            showToast(res.message, 'error');
-            btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i>Add to Cart');
-            if (res.redirect) window.location.href = res.redirect;
-        }
-    });
-    @else
-    showToast('Please login to add items to cart.', 'error');
-    setTimeout(() => window.location.href = '{{ route("login") }}', 1000);
-    @endauth
-});
-
-// ── Wishlist Toggle ───────────────────────
-$(document).on('click', '.wishlist-btn', function () {
-    const productId = $(this).data('product-id');
-    const btn = $(this);
-
-    @auth
-    $.post('{{ route("customer.wishlist.toggle") }}', { product_id: productId }, function (res) {
-        if (res.success) {  
-            $('#wishlist-count').text(res.wishlist_count);
-            showToast(res.message);
-            if (res.action === 'added') {
-                btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill text-danger');
-            } else {
-                btn.find('i').removeClass('bi-heart-fill text-danger').addClass('bi-heart');
-            }
-        }
-    });
-    @else
-    showToast('Please login to use wishlist.', 'error');
-    setTimeout(() => window.location.href = '{{ route("login") }}', 1000);
-    @endauth
-});
-
-// ── Toast Helper ──────────────────────────
-function showToast(message, type = 'success') {
-    const toast = $('#main-toast');
-    toast.removeClass('bg-success bg-danger bg-warning');
-    toast.addClass(type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-warning');
-    $('#toast-message').text(message);
-    new bootstrap.Toast(toast[0], { delay: 3000 }).show();
-}
-
-// ── AJAX Live Search ──────────────────────
-let searchTimer;
-$('#search-input').on('input', function () {
-    clearTimeout(searchTimer);
-    const query = $(this).val().trim();
-    const box   = $('#search-suggestions');
-
-    if (query.length < 2) { box.hide(); return; }
-
-    box.html('<div class="suggestion-empty"><i class="bi bi-hourglass-split me-1"></i>Searching...</div>').show();
-
-    searchTimer = setTimeout(function () {
-        $.get('{{ route("products.search") }}', { q: query }, function (data) {
-            if (!data.length) {
-                box.html('<div class="suggestion-empty"><i class="bi bi-inbox me-1"></i>No products found.</div>');
-                return;
-            }
-            let html = '';
-            data.forEach(function (p) {
-                html += `
-                <div class="suggestion-item" onclick="window.location='${p.url}'">
-                    <img src="${p.image}" alt="${p.name}">
-                    <div>
-                        <div class="s-name">${p.name}</div>
-                        <div class="s-price">PKR ${p.price}</div>
-                        <div style="font-size:11px;color:#999;">${p.category}</div>
-                    </div>
-                </div>`;
-            });
-            html += `<div class="suggestion-item justify-content-center text-primary fw-semibold"
-                onclick="window.location='{{ route('products.index') }}?search=${encodeURIComponent(query)}'">
-                <i class="bi bi-search me-2"></i>See all results for "${query}"
-            </div>`;
-            box.html(html);
+        // CSRF Setup 
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
-    }, 300);
-});
 
-// Hide suggestions on outside click
-$(document).on('click', function (e) {
-    if (!$(e.target).closest('#search-container').length) {
-        $('#search-suggestions').hide();
-    }
-});
+        // Add to Cart 
+        $(document).on('click', '.btn-add-cart:not(:disabled)', function () {
+            const productId = $(this).data('product-id');
+            const btn = $(this);
 
-// Search button
-$('#search-btn').on('click', function () {
-    const q = $('#search-input').val().trim();
-    if (q.length > 0) {
-        window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(q);
-    }
-});
+            @auth
+            btn.prop('disabled', true).html('<i class="bi bi-hourglass-split me-1"></i>Adding...');
 
-// Enter key search
-$('#search-input').on('keydown', function (e) {
-    if (e.key === 'Enter') {
-        const q = $(this).val().trim();
-        if (q.length > 0) {
-            window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(q);
+            $.post('{{ route("customer.cart.add") }}', { product_id: productId }, function (res) {
+                if (res.success) {
+                    $('#cart-count').text(res.cart_count);
+                    showToast(res.message);
+                    btn.html('<i class="bi bi-check-lg me-1"></i>Added!');
+                    setTimeout(() => btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i>Add to Cart'), 1500);
+                } else {
+                    showToast(res.message, 'error');
+                    btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i>Add to Cart');
+                    if (res.redirect) window.location.href = res.redirect;
+                }
+            });
+            @else
+            showToast('Please login to add items to cart.', 'error');
+            setTimeout(() => window.location.href = '{{ route("login") }}', 1000);
+            @endauth
+        });
+
+        // Wishlist Toggle
+        $(document).on('click', '.wishlist-btn', function () {
+            const productId = $(this).data('product-id');
+            const btn = $(this);
+
+            @auth
+            $.post('{{ route("customer.wishlist.toggle") }}', { product_id: productId }, function (res) {
+                if (res.success) {  
+                    $('#wishlist-count').text(res.wishlist_count);
+                    showToast(res.message);
+                    if (res.action === 'added') {
+                        btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+                    } else {
+                        btn.find('i').removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+                    }
+                }
+            });
+            @else
+            showToast('Please login to use wishlist.', 'error');
+            setTimeout(() => window.location.href = '{{ route("login") }}', 1000);
+            @endauth
+        });
+
+        // Toast Helper
+        function showToast(message, type = 'success') {
+            const toast = $('#main-toast');
+            toast.removeClass('bg-success bg-danger bg-warning');
+            toast.addClass(type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-warning');
+            $('#toast-message').text(message);
+            new bootstrap.Toast(toast[0], { delay: 3000 }).show();
         }
-    }
-});
 
-// Mobile menu
-$('#mobile-menu-btn').on('click', function () {
-    $('#mobile-search-bar').slideToggle(200);
-});
+        // AJAX Live Search 
+        let searchTimer;
+        $('#search-input').on('input', function () {
+            clearTimeout(searchTimer);
+            const query = $(this).val().trim();
+            const box   = $('#search-suggestions');
+
+            if (query.length < 2) { box.hide(); return; }
+
+            box.html('<div class="suggestion-empty"><i class="bi bi-hourglass-split me-1"></i>Searching...</div>').show();
+
+            searchTimer = setTimeout(function () {
+                $.get('{{ route("products.search") }}', { q: query }, function (data) {
+                    if (!data.length) {
+                        box.html('<div class="suggestion-empty"><i class="bi bi-inbox me-1"></i>No products found.</div>');
+                        return;
+                    }
+                    let html = '';
+                    data.forEach(function (p) {
+                        html += `
+                        <div class="suggestion-item" onclick="window.location='${p.url}'">
+                            <img src="${p.image}" alt="${p.name}">
+                            <div>
+                                <div class="s-name">${p.name}</div>
+                                <div class="s-price">PKR ${p.price}</div>
+                                <div style="font-size:11px;color:#999;">${p.category}</div>
+                            </div>
+                        </div>`;
+                    });
+                    html += `<div class="suggestion-item justify-content-center text-primary fw-semibold"
+                        onclick="window.location='{{ route('products.index') }}?search=${encodeURIComponent(query)}'">
+                        <i class="bi bi-search me-2"></i>See all results for "${query}"
+                    </div>`;
+                    box.html(html);
+                });
+            }, 300);
+        });
+
+        // Hide suggestions on outside click
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#search-container').length) {
+                $('#search-suggestions').hide();
+            }
+        });
+
+        // Search button
+        $('#search-btn').on('click', function () {
+            const q = $('#search-input').val().trim();
+            if (q.length > 0) {
+                window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(q);
+            }
+        });
+
+        // Enter key search
+        $('#search-input').on('keydown', function (e) {
+            if (e.key === 'Enter') {
+                const q = $(this).val().trim();
+                if (q.length > 0) {
+                    window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(q);
+                }
+            }
+        });
+
+        // Mobile menu
+        $('#mobile-menu-btn').on('click', function () {
+            $('#mobile-search-bar').slideToggle(200);
+        });
 
     </script>
 

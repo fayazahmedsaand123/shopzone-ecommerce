@@ -14,11 +14,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class OrderController extends Controller
-{
+class OrderController extends Controller {
+
     // Show checkout page
-    public function checkout()
-    {
+    public function checkout() {
         $items = Cart::with('product')
             ->where('user_id', auth()->id())
             ->get();
@@ -39,8 +38,7 @@ class OrderController extends Controller
     }
 
     // Place order
-    public function placeOrder(Request $request)
-    {
+    public function placeOrder(Request $request) {
         $request->validate([
             'full_name'    => 'required|string|max:100',
             'phone'        => 'required|string|max:20',
@@ -158,8 +156,7 @@ class OrderController extends Controller
     }
 
     // Order history
-    public function index()
-    {
+    public function index() {
         $orders = Order::where('user_id', auth()->id())
             ->latest()
             ->paginate(10);
@@ -168,8 +165,7 @@ class OrderController extends Controller
     }
 
     // Order details
-    public function show(Order $order)
-    {
+    public function show(Order $order) {
         if ($order->user_id !== auth()->id()) {
             abort(403);
         }

@@ -6,11 +6,10 @@ use App\Models\Wishlist;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-class WishlistController extends Controller
-{
+class WishlistController extends Controller {
+
     // Toggle wishlist
-    public function toggle(Request $request)
-    {
+    public function toggle(Request $request) {
         $request->validate(['product_id' => 'required|exists:products,id']);
 
         $existing = Wishlist::where('user_id', auth()->id())
@@ -41,8 +40,7 @@ class WishlistController extends Controller
     }
 
     // View wishlist
-    public function index()
-    {
+    public function index() {
         $items = Wishlist::with('product.category')
             ->where('user_id', auth()->id())
             ->latest()
