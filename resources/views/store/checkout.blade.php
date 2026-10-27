@@ -23,6 +23,16 @@
                     @error('full_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
 
+                {{-- Email --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email Address *</label>
+                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                        value="{{ old('email', auth()->user()->email) }}"
+                        placeholder="your@email.com">
+                    <div class="form-text">Order confirmation will be sent to this email.</div>
+                    @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Phone Number *</label>
                     <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"

@@ -44,6 +44,7 @@ class OrderController extends Controller {
     public function placeOrder(Request $request) {
         $request->validate([
             'full_name'      => 'required|string|max:100',
+            'email' => 'required|email',
             'phone'          => 'required|string|max:20',
             'address'        => 'required|string',
             'city'           => 'required|string|max:100',
@@ -158,7 +159,7 @@ class OrderController extends Controller {
 
             // Send order confirmation email
             try {
-                Mail::to(auth()->user()->email)->send(new OrderConfirmationMail($order));
+                Mail::to($request->email)->send(new OrderConfirmationMail($order));
             } catch (\Exception $e) {
                 // Email failed but order is placed — don't stop the user
             }
