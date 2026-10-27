@@ -10,9 +10,12 @@ use App\Models\Payment;
 use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\InventoryMovement;
+use App\Mail\OrderConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+
 
 class OrderController extends Controller {
 
@@ -145,6 +148,16 @@ class OrderController extends Controller {
             Cart::where('user_id', auth()->id())->delete();
 
             DB::commit();
+
+            // Load order items before sending email
+            $order->load('items');
+
+            // Send order confirmation email
+            try {
+                Mail::to(auth()->user()->email)->send(new OrderConfirmationMail($order));
+            } catch (\Exception $e) {
+                // Email failed but order is placed — don't stop the user
+            }
 
             return redirect()->route('customer.orders.show', $order->id)
                 ->with('success', 'Order placed successfully! Order #' . $order->order_number);
