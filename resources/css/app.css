@@ -404,3 +404,17 @@ body {
     font-size: 15px;
 }
 .brand-logo-card:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 4px 15px rgba(13,110,253,.1); }
+
+/* ── Payment Options ─────────────────────── */
+.payment-option {
+    cursor: pointer;
+    transition: all .2s;
+}
+.payment-option:hover {
+    border-color: var(--primary) !important;
+    background: #f8f9ff;
+}
+.payment-option.border-primary {
+    background: #f0f4ff;
+}
+.payment-radio { cursor: pointer; }

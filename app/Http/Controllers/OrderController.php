@@ -43,12 +43,14 @@ class OrderController extends Controller {
     // Place order
     public function placeOrder(Request $request) {
         $request->validate([
-            'full_name'    => 'required|string|max:100',
-            'phone'        => 'required|string|max:20',
-            'address'      => 'required|string',
-            'city'         => 'required|string|max:100',
-            'payment_method' => 'required|in:cod',
-            'order_notes'  => 'nullable|string|max:500',
+            'full_name'      => 'required|string|max:100',
+            'phone'          => 'required|string|max:20',
+            'address'        => 'required|string',
+            'city'           => 'required|string|max:100',
+            'payment_method' => 'required|in:cod,jazzcash,easypaisa,bank_transfer',
+            'transaction_id' => 'required_unless:payment_method,cod|nullable|string|max:100',
+            'account_number' => 'required_unless:payment_method,cod|nullable|string|max:20',
+            'order_notes'    => 'nullable|string|max:500',
         ]);
 
         $items = Cart::with('product')
@@ -87,7 +89,9 @@ class OrderController extends Controller {
                 'shipping_amount' => $shipping,
                 'total'           => $total,
                 'payment_method'  => $request->payment_method,
-                'payment_status'  => 'pending',
+                'payment_status'  => $request->payment_method === 'cod' ? 'pending' : 'pending',
+                'transaction_id'  => $request->transaction_id,
+                'account_number'  => $request->account_number,
                 'shipping_name'   => $request->full_name,
                 'shipping_phone'  => $request->phone,
                 'shipping_address'=> $request->address,

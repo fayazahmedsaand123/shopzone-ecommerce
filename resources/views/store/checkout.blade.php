@@ -57,16 +57,160 @@
                     <i class="bi bi-credit-card me-2 text-primary"></i>Payment Method
                 </h6>
 
-                <div class="form-check border rounded-3 p-3 mb-2" style="cursor:pointer;">
-                    <input class="form-check-input" type="radio" name="payment_method"
-                        id="cod" value="cod" checked>
-                    <label class="form-check-label d-flex align-items-center gap-2 w-100" for="cod" style="cursor:pointer;">
-                        <i class="bi bi-cash-coin fs-4 text-success"></i>
-                        <div>
-                            <div class="fw-bold">Cash on Delivery</div>
-                            <div class="text-muted" style="font-size:12px;">Pay when your order arrives at your door</div>
+                {{-- Payment Options --}}
+                <div class="d-flex flex-column gap-3" id="payment-options">
+
+                    {{-- Cash on Delivery --}}
+                    <div class="payment-option border rounded-3 p-3" data-method="cod">
+                        <div class="form-check">
+                            <input class="form-check-input payment-radio" type="radio"
+                                name="payment_method" value="cod" id="pay_cod" checked>
+                            <label class="form-check-label d-flex align-items-center gap-3 w-100" for="pay_cod" style="cursor:pointer;">
+                                <div class="payment-icon rounded-2 d-flex align-items-center justify-content-center"
+                                    style="width:48px;height:48px;background:#e8f5e9;font-size:22px;">
+                                    💵
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="font-size:14px;">Cash on Delivery</div>
+                                    <div class="text-muted" style="font-size:12px;">Pay when your order arrives at your door</div>
+                                </div>
+                                <span class="ms-auto badge bg-success">Available</span>
+                            </label>
                         </div>
-                    </label>
+                    </div>
+
+                    {{-- JazzCash --}}
+                    <div class="payment-option border rounded-3 p-3" data-method="jazzcash">
+                        <div class="form-check">
+                            <input class="form-check-input payment-radio" type="radio"
+                                name="payment_method" value="jazzcash" id="pay_jazz">
+                            <label class="form-check-label d-flex align-items-center gap-3 w-100" for="pay_jazz" style="cursor:pointer;">
+                                <div class="payment-icon rounded-2 d-flex align-items-center justify-content-center"
+                                    style="width:48px;height:48px;background:#fff3e0;font-size:22px;">
+                                    📱
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="font-size:14px;">JazzCash</div>
+                                    <div class="text-muted" style="font-size:12px;">Send payment to: <strong>0329-2073348</strong></div>
+                                </div>
+                                <span class="ms-auto badge bg-warning text-dark">Manual</span>
+                            </label>
+                        </div>
+                        {{-- JazzCash Details --}}
+                        <div class="payment-details mt-3 ps-4" style="display:none;">
+                            <div class="bg-warning bg-opacity-10 rounded-3 p-3 mb-3">
+                                <div class="fw-bold mb-1" style="font-size:13px;"><i class="bi bi-info-circle me-1"></i>Payment Instructions</div>
+                                <ol class="mb-0 ps-3" style="font-size:12px;color:#6c757d;">
+                                    <li>Open your JazzCash app</li>
+                                    <li>Send <strong>PKR {{ number_format($total) }}</strong> to <strong>0329-2073348</strong></li>
+                                    <li>Enter the transaction ID and your account number below</li>
+                                    <li>We will verify and confirm your order within 1 hour</li>
+                                </ol>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" style="font-size:12px;">Transaction ID *</label>
+                                    <input type="text" name="transaction_id" class="form-control form-control-sm"
+                                        placeholder="e.g. TXN123456789">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" style="font-size:12px;">Your JazzCash Number *</label>
+                                    <input type="text" name="account_number" class="form-control form-control-sm"
+                                        placeholder="03XX-XXXXXXX">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Easypaisa --}}
+                    <div class="payment-option border rounded-3 p-3" data-method="easypaisa">
+                        <div class="form-check">
+                            <input class="form-check-input payment-radio" type="radio"
+                                name="payment_method" value="easypaisa" id="pay_easy">
+                            <label class="form-check-label d-flex align-items-center gap-3 w-100" for="pay_easy" style="cursor:pointer;">
+                                <div class="payment-icon rounded-2 d-flex align-items-center justify-content-center"
+                                    style="width:48px;height:48px;background:#e8f5e9;font-size:22px;">
+                                    💚
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="font-size:14px;">Easypaisa</div>
+                                    <div class="text-muted" style="font-size:12px;">Send payment to: <strong>0349-9050580</strong></div>
+                                </div>
+                                <span class="ms-auto badge bg-success">Available</span>
+                            </label>
+                        </div>
+                        <div class="payment-details mt-3 ps-4" style="display:none;">
+                            <div class="bg-success bg-opacity-10 rounded-3 p-3 mb-3">
+                                <div class="fw-bold mb-1" style="font-size:13px;"><i class="bi bi-info-circle me-1"></i>Payment Instructions</div>
+                                <ol class="mb-0 ps-3" style="font-size:12px;color:#6c757d;">
+                                    <li>Open your Easypaisa app</li>
+                                    <li>Send <strong>PKR {{ number_format($total) }}</strong> to <strong>0349-9050580</strong></li>
+                                    <li>Enter your transaction ID and Easypaisa number below</li>
+                                    <li>We will verify and confirm within 1 hour</li>
+                                </ol>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" style="font-size:12px;">Transaction ID *</label>
+                                    <input type="text" name="transaction_id" class="form-control form-control-sm"
+                                        placeholder="e.g. EP123456789">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" style="font-size:12px;">Your Easypaisa Number *</label>
+                                    <input type="text" name="account_number" class="form-control form-control-sm"
+                                        placeholder="03XX-XXXXXXX">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Bank Transfer --}}
+                    <div class="payment-option border rounded-3 p-3" data-method="bank_transfer">
+                        <div class="form-check">
+                            <input class="form-check-input payment-radio" type="radio"
+                                name="payment_method" value="bank_transfer" id="pay_bank">
+                            <label class="form-check-label d-flex align-items-center gap-3 w-100" for="pay_bank" style="cursor:pointer;">
+                                <div class="payment-icon rounded-2 d-flex align-items-center justify-content-center"
+                                    style="width:48px;height:48px;background:#e3f2fd;font-size:22px;">
+                                    🏦
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="font-size:14px;">Bank Transfer</div>
+                                    <div class="text-muted" style="font-size:12px;">Transfer to our bank account</div>
+                                </div>
+                                <span class="ms-auto badge bg-info text-dark">Manual</span>
+                            </label>
+                        </div>
+                        <div class="payment-details mt-3 ps-4" style="display:none;">
+                            <div class="bg-info bg-opacity-10 rounded-3 p-3 mb-3">
+                                <div class="fw-bold mb-2" style="font-size:13px;"><i class="bi bi-bank me-1"></i>Bank Account Details</div>
+                                <div class="row g-1" style="font-size:12px;">
+                                    <div class="col-6 text-muted">Bank Name:</div>
+                                    <div class="col-6 fw-bold">Meezan Bank</div>
+                                    <div class="col-6 text-muted">Account Title:</div>
+                                    <div class="col-6 fw-bold">ShopZone Pakistan</div>
+                                    <div class="col-6 text-muted">Account Number:</div>
+                                    <div class="col-6 fw-bold">0123-4567890-001</div>
+                                    <div class="col-6 text-muted">IBAN:</div>
+                                    <div class="col-6 fw-bold">PK12MEZN0001234567890</div>
+                                    <div class="col-6 text-muted">Amount:</div>
+                                    <div class="col-6 fw-bold text-danger">PKR {{ number_format($total) }}</div>
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" style="font-size:12px;">Transaction / Reference ID *</label>
+                                    <input type="text" name="transaction_id" class="form-control form-control-sm"
+                                        placeholder="e.g. TXN123456">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" style="font-size:12px;">Your Bank Account Number *</label>
+                                    <input type="text" name="account_number" class="form-control form-control-sm"
+                                        placeholder="Your account number">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,4 +269,37 @@
     </div>
 </form>
 </div>
+@push('scripts')
+    <script>
+        // Payment method toggle
+        $('.payment-radio').on('change', function() {
+            const selected = $(this).val();
+
+            // Reset all options
+            $('.payment-option').removeClass('border-primary')
+                                .addClass('border');
+            $('.payment-details').slideUp(200);
+
+            // Highlight selected
+            $(this).closest('.payment-option')
+                .removeClass('border')
+                .addClass('border-primary');
+
+            // Show details for non-COD
+            if (selected !== 'cod') {
+                $(this).closest('.payment-option')
+                    .find('.payment-details')
+                    .slideDown(200);
+            }
+
+            // Clear previous transaction inputs
+            $('input[name="transaction_id"], input[name="account_number"]').val('');
+        });
+
+        // Highlight COD by default
+        $('#pay_cod').closest('.payment-option')
+                    .removeClass('border')
+                    .addClass('border-primary');
+    </script>
+@endpush
 @endsection

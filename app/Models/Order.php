@@ -11,7 +11,8 @@ class Order extends Model {
         'order_number','user_id','status','subtotal','discount_amount',
         'shipping_amount','tax_amount','total','coupon_code','payment_method',
         'payment_status','shipping_name','shipping_phone','shipping_address',
-        'shipping_city','shipping_country','order_notes'
+        'shipping_city','shipping_country','order_notes',
+        'transaction_id', 'account_number',
     ];
 
     public function user() { 

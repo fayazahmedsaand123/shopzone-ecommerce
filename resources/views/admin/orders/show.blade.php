@@ -107,12 +107,30 @@
 
         {{-- Shipping --}}
         <div class="admin-table p-4">
-            <h6 class="fw-bold mb-3 pb-2 border-bottom">Shipping</h6>
+            <h6 class="fw-bold mb-3 pb-2 border-bottom">Payment Details</h6>
             <div style="font-size:13px;">
-                <div class="fw-semibold">{{ $order->shipping_name }}</div>
-                <div class="text-muted">{{ $order->shipping_phone }}</div>
-                <div class="text-muted">{{ $order->shipping_address }}</div>
-                <div class="text-muted">{{ $order->shipping_city }}</div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Method</span>
+                    <span class="fw-bold text-uppercase">{{ str_replace('_',' ',$order->payment_method) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Status</span>
+                    <span class="badge bg-{{ $order->payment_status === 'paid' ? 'success' : 'warning' }}">
+                        {{ ucfirst($order->payment_status) }}
+                    </span>
+                </div>
+                @if($order->transaction_id)
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Transaction ID</span>
+                    <span class="fw-bold font-monospace">{{ $order->transaction_id }}</span>
+                </div>
+                @endif
+                @if($order->account_number)
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Account #</span>
+                    <span class="fw-bold">{{ $order->account_number }}</span>
+                </div>
+                @endif
             </div>
         </div>
     </div>
