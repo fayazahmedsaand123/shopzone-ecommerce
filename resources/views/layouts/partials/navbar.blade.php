@@ -151,29 +151,29 @@
     <div class="container">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                   href="{{ route('home') }}">
                     <i class="bi bi-house me-1"></i>Home
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('products.index') }}">All Products</a>
+                <a class="nav-link {{ request()->routeIs('products.index') ? 'active' : '' }}"
+                   href="{{ route('products.index') }}">All Products</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Categories</a>
+                <a class="nav-link" href="{{ route('products.index') }}?sort=newest">New Arrivals</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">New Arrivals</a>
+                <a class="nav-link" href="{{ route('products.index') }}?sort=popular">Best Sellers</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Best Sellers</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" style="color:#ffd700 !important; font-weight:700;">
+                <a class="nav-link" href="{{ route('products.index') }}?sale=1"
+                   style="color:#ffd700 !important;font-weight:700;">
                     <i class="bi bi-lightning-fill me-1"></i>Deals & Offers
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Brands</a>
+                <a class="nav-link" href="{{ route('products.index') }}">Brands</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Contact Us</a>
