@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
@@ -115,4 +116,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
     Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
+
+    // Coupons
+    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+    Route::get('/coupons/create', [CouponController::class, 'create'])->name('coupons.create');
+    Route::post('/coupons', [CouponController::class, 'store'])->name('coupons.store');
+    Route::get('/coupons/{coupon}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
+    Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
+    Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
 });

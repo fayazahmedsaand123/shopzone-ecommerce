@@ -146,7 +146,7 @@
             <i class="bi bi-people"></i> Customers
         </a>
 
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('admin.coupons.index') }}" class="sidebar-link {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
             <i class="bi bi-tag"></i> Coupons
         </a>
 
