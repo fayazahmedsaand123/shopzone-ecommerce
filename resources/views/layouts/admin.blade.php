@@ -142,18 +142,20 @@
         <a href="{{ route('admin.orders.index') }}" class="sidebar-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
             <i class="bi bi-bag"></i> Orders
         </a>
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('admin.customers.index') }}" class="sidebar-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
             <i class="bi bi-people"></i> Customers
         </a>
+
         <a href="#" class="sidebar-link">
             <i class="bi bi-tag"></i> Coupons
         </a>
 
         <div class="sidebar-label">Content</div>
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
             <i class="bi bi-star"></i> Reviews
         </a>
-        <a href="#" class="sidebar-link">
+
+        <a href="{{ route('admin.messages.index') }}" class="sidebar-link {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}">
             <i class="bi bi-envelope"></i> Messages
         </a>
 

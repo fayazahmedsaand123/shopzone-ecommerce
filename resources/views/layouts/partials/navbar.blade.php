@@ -44,12 +44,20 @@
                     <i class="bi bi-grid me-1"></i>Categories
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-laptop me-2"></i>Electronics</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-phone me-2"></i>Mobile Phones</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-house me-2"></i>Home & Living</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-bag me-2"></i>Fashion</a></li>
+                    @php
+                    $catIcons = ['bi-laptop','bi-phone','bi-house','bi-bag','bi-bicycle','bi-book','bi-controller','bi-heart-pulse'];
+                    @endphp
+                    @foreach($navCategories ?? [] as $i => $cat)
+                    <li>
+                        <a class="dropdown-item" href="{{ route('products.index', ['category' => $cat->slug]) }}">
+                            <i class="bi {{ $catIcons[$i % count($catIcons)] }} me-2 text-primary"></i>{{ $cat->name }}
+                        </a>
+                    </li>
+                    @endforeach
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-primary" href="#">View All Categories</a></li>
+                    <li><a class="dropdown-item text-primary fw-semibold" href="{{ route('products.index') }}">
+                        <i class="bi bi-grid me-2"></i>View All Categories
+                    </a></li>
                 </ul>
             </div>
 

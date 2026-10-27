@@ -58,9 +58,10 @@
                 <div class="col-lg-2 col-md-6">
                     <h6>Quick Links</h6>
                     <a href="{{ route('home') }}">Home</a>
-                    <a href="#">All Products</a>
-                    <a href="#">New Arrivals</a>
-                    <a href="#">Best Sellers</a>
+                    <a href="{{ route('products.index') }}">All Products</a>
+                    <a href="{{ route('new-arrivals') }}">New Arrivals</a>
+                    <a href="{{ route('best-sellers') }}">Best Sellers</a>
+                    <a href="{{ route('about') }}">About Us</a>
                     <a href="#">Deals & Offers</a>
                 </div>
                 <div class="col-lg-2 col-md-6">
@@ -69,14 +70,14 @@
                     <a href="#">Order History</a>
                     <a href="#">Track Order</a>
                     <a href="#">Returns & Refunds</a>
-                    <a href="#">Help & Contact</a>
+                    <a href="{{ route('contact') }}">Help & Contact</a>
                 </div>
                 <div class="col-lg-2 col-md-6">
                     <h6>Policies</h6>
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>
                     <a href="#">Shipping Policy</a>
-                    <a href="#">FAQ</a>
+                    <a href="{{ route('faq') }}">FAQ</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h6>Newsletter</h6>

@@ -11,6 +11,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
@@ -32,6 +35,9 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::get('/brands', [ProductController::class, 'brands'])->name('brands.index');
 Route::get('/best-sellers', [ProductController::class, 'bestSellers'])->name('best-sellers');
 Route::get('/new-arrivals', [ProductController::class, 'newArrivals'])->name('new-arrivals');
+
+Route::get('/about', fn() => view('store.about'))->name('about');
+Route::get('/faq', fn() => view('store.faq'))->name('faq');
 
 require __DIR__.'/auth.php';
 
@@ -95,4 +101,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+    // Customers
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::patch('/customers/{user}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggleStatus');
+
+    // Reviews
+    Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('/reviews/{review}/status', [ReviewController::class, 'updateStatus'])->name('reviews.updateStatus');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    // Messages
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
 });
