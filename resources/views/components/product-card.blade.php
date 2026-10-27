@@ -26,7 +26,9 @@
             @endif
         </div>
 
-        <img src="{{ $image }}" alt="{{ $product->name }}" class="product-img" loading="lazy">
+        <a href="{{ route('products.show', $product->slug) }}">
+            <img src="{{ $image }}" alt="{{ $product->name }}" class="product-img" loading="lazy">
+        </a>
 
         {{-- Hover Actions --}}
         <div class="product-actions">
@@ -45,7 +47,12 @@
             <div class="product-category">{{ $product->category->name }}</div>
         @endif
 
-        <h6 class="product-name">{{ Str::limit($product->name, 45) }}</h6>
+        <h6 class="product-name">
+            <a href="{{ route('products.show', $product->slug) }}"
+            style="text-decoration:none;color:inherit;">
+                {{ Str::limit($product->name, 45) }}
+            </a>
+        </h6>
 
         {{-- Rating --}}
         <div class="product-rating">

@@ -63,6 +63,63 @@ class ProductController extends Controller {
         return view('store.products', compact('products', 'categories', 'brands'));
     }
 
+    // Product Detail Page
+    public function show(Product $product) {
+        if ($product->status !== 'active') {
+            abort(404);
+        }
+
+        // Increment view count
+        $product->increment('views_count');
+
+        $product->load(['category', 'brand', 'images', 'reviews' => function($q) {
+            $q->where('status', 'approved')->with('user')->latest();
+        }]);
+
+        // Related products
+        $related = Product::with(['category', 'brand'])
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('status', 'active')
+            ->take(4)
+            ->get();
+
+        return view('store.product-detail', compact('product', 'related'));
+    }
+
+    // Submit Review
+    public function review(Request $request, Product $product) {
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Please login to submit a review.']);
+        }
+
+        $request->validate([
+            'rating'  => 'required|integer|min:1|max:5',
+            'title'   => 'nullable|string|max:100',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        // Check if already reviewed
+        $existing = \App\Models\Review::where('user_id', auth()->id())
+            ->where('product_id', $product->id)
+            ->first();
+
+        if ($existing) {
+            return response()->json(['success' => false, 'message' => 'You have already reviewed this product.']);
+        }
+
+        \App\Models\Review::create([
+            'user_id'    => auth()->id(),
+            'product_id' => $product->id,
+            'rating'     => $request->rating,
+            'title'      => $request->title,
+            'comment'    => $request->comment,
+            'status'     => 'pending',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Review submitted! It will appear after approval.']);
+    }
+
     // AJAX Live Search
     public function search(Request $request) {
         $query = $request->get('q', '');

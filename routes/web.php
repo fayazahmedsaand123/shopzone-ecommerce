@@ -21,6 +21,8 @@ Route::get('/search', [ProductController::class, 'search'])->name('products.sear
 Route::post('/cart/add', function() {
     return response()->json(['success' => false, 'message' => 'Please login to add items to cart.', 'redirect' => route('login')]);
 })->name('cart.add.guest')->middleware('guest');
+Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/products/{product:slug}/review', [ProductController::class, 'review'])->name('products.review');
 
 require __DIR__.'/auth.php';
 
