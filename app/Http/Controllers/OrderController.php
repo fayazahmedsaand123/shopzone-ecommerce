@@ -154,14 +154,22 @@ class OrderController extends Controller {
 
             DB::commit();
 
-            // Load order items before sending email
-            $order->load('items');
-
-            // Send order confirmation email
             try {
+                $order->load('items');
+
+                // Send confirmation to customer
                 Mail::to($request->email)->send(new OrderConfirmationMail($order));
+
+                // Get notification emails from database settings
+                $saved     = \App\Models\StoreSetting::get('notification_emails', '');
+                $notifyEmails = array_values(array_filter(array_map('trim', explode(',', $saved))));
+
+                if (!empty($notifyEmails)) {
+                    Mail::to($notifyEmails)->send(new NewOrderAdminMail($order));
+                }
+
             } catch (\Exception $e) {
-                // Email failed but order is placed — don't stop the user
+                // Silent fail
             }
 
             return redirect()->route('customer.orders.show', $order->id)

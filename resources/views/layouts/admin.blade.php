@@ -163,6 +163,10 @@
         <a href="{{ route('home') }}" class="sidebar-link" target="_blank">
             <i class="bi bi-shop"></i> View Store
         </a>
+        <a href="{{ route('admin.settings.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+            <i class="bi bi-gear"></i> Settings
+        </a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="sidebar-link border-0 bg-transparent w-100 text-start">

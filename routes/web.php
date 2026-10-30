@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
@@ -124,4 +125,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/coupons/{coupon}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
     Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
     Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
+
+    // Settings
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings/email/add', [SettingsController::class, 'addEmail'])->name('settings.email.add');
+    Route::delete('/settings/email/remove', [SettingsController::class, 'removeEmail'])->name('settings.email.remove');
 });
