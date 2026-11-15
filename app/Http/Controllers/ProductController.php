@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller {
@@ -84,7 +85,13 @@ class ProductController extends Controller {
             ->take(4)
             ->get();
 
-        return view('store.product-detail', compact('product', 'related'));
+        return view('store.product-detail', [
+            'product'    => $product,
+            'related'    => $related,
+            'inWishlist' => auth()->check()
+                ? Wishlist::where('user_id', auth()->id())->where('product_id', $product->id)->exists()
+                : false,
+        ]);
     }
 
     // Submit Review
@@ -142,9 +149,7 @@ class ProductController extends Controller {
                     'name'     => $product->name,
                     'price'    => number_format($product->sale_price ?? $product->price),
                     'category' => $product->category->name ?? '',
-                    'image'    => $product->main_image
-                        ? asset('storage/' . $product->main_image)
-                        : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&q=80',
+                    'image'    => $product->image_url,
                     'url'      => route('products.index', ['search' => $product->name]),
                 ];
             });

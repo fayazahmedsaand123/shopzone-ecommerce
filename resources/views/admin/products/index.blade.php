@@ -57,9 +57,9 @@
             <tr id="row-{{ $product->id }}">
                 <td>
                     @if($product->main_image)
-                        <img src="{{ asset('storage/'.$product->main_image) }}" width="44" height="44" class="rounded" style="object-fit:cover;">
+                        <img src="{{ $product->image_url }}" width="44" height="44" class="rounded" style="object-fit:cover;">
                     @else
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
+                        <div class="surface-soft rounded d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
                             <i class="bi bi-image text-muted"></i>
                         </div>
                     @endif

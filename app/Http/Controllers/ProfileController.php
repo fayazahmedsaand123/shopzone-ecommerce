@@ -31,7 +31,7 @@ class ProfileController extends Controller {
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('customer.profile.edit')->with('status', 'profile-updated');
     }
 
     /**
@@ -43,6 +43,13 @@ class ProfileController extends Controller {
         ]);
 
         $user = $request->user();
+
+        if ($user->orders()->exists()) {
+            return Redirect::route('customer.profile.edit')->withErrors(
+                ['password' => 'Accounts with existing orders cannot be deleted. Please contact support.'],
+                'userDeletion'
+            );
+        }
 
         Auth::logout();
 

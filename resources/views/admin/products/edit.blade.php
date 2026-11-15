@@ -50,7 +50,7 @@
             @if($product->main_image)
                 <div class="mb-2">
                     <label class="form-label fw-semibold">Current Main Image</label><br>
-                    <img src="{{ asset('storage/'.$product->main_image) }}" height="80" class="rounded border">
+                    <img src="{{ $product->image_url }}" height="80" class="rounded border">
                 </div>
             @endif
             <div class="mb-3">

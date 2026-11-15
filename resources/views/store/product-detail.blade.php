@@ -5,127 +5,121 @@
 <div class="container py-4">
 
     {{-- Breadcrumb --}}
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb" style="font-size:13px;">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></li>
             @if($product->category)
-            <li class="breadcrumb-item">{{ $product->category->name }}</li>
+            <li class="breadcrumb-item">
+                <a href="{{ route('products.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a>
+            </li>
             @endif
             <li class="breadcrumb-item active">{{ Str::limit($product->name, 40) }}</li>
         </ol>
     </nav>
+
+    @php
+        $avg = round($product->average_rating, 1);
+        $disc = $product->sale_price ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
+    @endphp
 
     {{-- Product Main Section --}}
     <div class="row g-4 mb-5">
 
         {{-- Images --}}
         <div class="col-lg-5">
-            <div class="bg-white rounded-3 border p-3">
-                <div class="mb-3" style="aspect-ratio:1;overflow:hidden;border-radius:10px;background:#f8f9fa;">
+            <div class="panel panel-pad">
+                <div class="gallery-main mb-3">
                     <img id="main-product-img"
-                        src="{{ $product->main_image ? asset('storage/'.$product->main_image) : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80' }}"
+                        src="{{ $product->image_url }}"
                         alt="{{ $product->name }}"
-                        style="width:100%;height:100%;object-fit:cover;cursor:zoom-in;"
                         onclick="openLightbox(this.src)">
                 </div>
 
                 {{-- Gallery Thumbnails --}}
-                @if($product->images->count())
                 <div class="d-flex gap-2 flex-wrap">
-                    <img src="{{ $product->main_image ? asset('storage/'.$product->main_image) : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80' }}"
-                        class="thumb-img active" onclick="switchImage(this)"
-                        style="width:60px;height:60px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid var(--primary);">
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
+                        class="thumb-img active" onclick="switchImage(this)">
                     @foreach($product->images as $img)
                     <img src="{{ asset('storage/'.$img->image) }}"
-                        class="thumb-img" onclick="switchImage(this)"
-                        style="width:60px;height:60px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;">
+                        alt="{{ $product->name }}"
+                        class="thumb-img" onclick="switchImage(this)">
                     @endforeach
                 </div>
-                @endif
             </div>
         </div>
 
         {{-- Product Info --}}
         <div class="col-lg-7">
-            <div class="bg-white rounded-3 border p-4">
+            <div class="panel panel-pad h-100">
 
                 {{-- Category & Brand --}}
-                <div class="d-flex gap-2 mb-2">
+                <div class="d-flex gap-2 mb-3 flex-wrap">
                     @if($product->category)
-                    <span class="badge bg-primary bg-opacity-10 text-primary">{{ $product->category->name }}</span>
+                    <span class="badge bg-primary">{{ $product->category->name }}</span>
                     @endif
                     @if($product->brand)
-                    <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ $product->brand->name }}</span>
+                    <span class="badge bg-secondary">{{ $product->brand->name }}</span>
                     @endif
                     @if($product->is_featured)
-                    <span class="badge bg-warning text-dark">Featured</span>
+                    <span class="badge bg-warning">Featured</span>
                     @endif
                 </div>
 
-                <h2 class="fw-bold mb-2" style="font-size:24px;">{{ $product->name }}</h2>
+                <h1 class="mb-2" style="font-size:clamp(1.5rem,2.6vw,2rem);font-weight:800;">{{ $product->name }}</h1>
 
                 {{-- Rating Summary --}}
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    @php $avg = round($product->average_rating, 1); @endphp
-                    <div>
+                <div class="d-flex align-items-center gap-2 mb-4 flex-wrap" style="font-size:.8rem;">
+                    <div class="d-inline-flex align-items-center" style="gap:2px;">
                         @for($i = 1; $i <= 5; $i++)
-                            <i class="bi bi-star{{ $i <= $avg ? '-fill text-warning' : ' text-muted' }}"></i>
+                            <i class="bi bi-star{{ $i <= $avg ? '-fill' : '' }}"
+                               style="color:{{ $i <= $avg ? 'var(--accent)' : 'rgba(255,255,255,.16)' }};"></i>
                         @endfor
                     </div>
-                    <span class="text-muted" style="font-size:13px;">
-                        {{ $avg }}/5 ({{ $product->reviews->count() }} reviews)
-                    </span>
-                    <span class="text-muted" style="font-size:13px;">| SKU: {{ $product->sku }}</span>
+                    <span class="text-muted">{{ number_format($avg, 1) }}/5 ({{ $product->reviews->count() }} reviews)</span>
+                    <span class="text-muted">·</span>
+                    <span class="text-muted">SKU: {{ $product->sku }}</span>
                 </div>
 
                 {{-- Price --}}
-                <div class="mb-3 pb-3 border-bottom">
+                <div class="d-flex align-items-end gap-3 mb-4 pb-4" style="border-bottom:1px solid var(--line);">
                     @if($product->sale_price)
-                        <span style="font-size:32px;font-weight:900;color:var(--accent);">
-                            PKR {{ number_format($product->sale_price) }}
-                        </span>
-                        <span class="text-muted ms-2" style="font-size:18px;text-decoration:line-through;">
-                            PKR {{ number_format($product->price) }}
-                        </span>
-                        @php $disc = round((($product->price - $product->sale_price) / $product->price) * 100); @endphp
-                        <span class="badge bg-danger ms-2">-{{ $disc }}% OFF</span>
+                        <span class="detail-price">PKR {{ number_format($product->sale_price) }}</span>
+                        <span class="detail-old">PKR {{ number_format($product->price) }}</span>
+                        <span class="badge bg-danger">-{{ $disc }}% OFF</span>
                     @else
-                        <span style="font-size:32px;font-weight:900;color:var(--accent);">
-                            PKR {{ number_format($product->price) }}
-                        </span>
+                        <span class="detail-price">PKR {{ number_format($product->price) }}</span>
                     @endif
                 </div>
 
                 {{-- Short Description --}}
                 @if($product->short_description)
-                <p class="text-muted mb-3" style="font-size:14px;">{{ $product->short_description }}</p>
+                <p class="text-muted mb-3" style="font-size:.88rem;line-height:1.75;">{{ $product->short_description }}</p>
                 @endif
 
                 {{-- Stock Status --}}
-                <div class="mb-3">
+                <div class="mb-3" style="font-size:.84rem;">
                     @if($product->stock_quantity > 0)
                         <span class="text-success fw-semibold">
                             <i class="bi bi-check-circle-fill me-1"></i>
-                            In Stock ({{ $product->stock_quantity }} available)
+                            In stock — {{ $product->stock_quantity }} available
                         </span>
                     @else
                         <span class="text-danger fw-semibold">
-                            <i class="bi bi-x-circle-fill me-1"></i>Out of Stock
+                            <i class="bi bi-x-circle-fill me-1"></i>Out of stock
                         </span>
                     @endif
                 </div>
 
                 {{-- Quantity + Add to Cart --}}
                 @if($product->stock_quantity > 0)
-                <div class="d-flex align-items-center gap-3 mb-3">
-                    <div class="d-flex align-items-center border rounded-3 overflow-hidden">
-                        <button class="btn btn-light px-3 py-2" id="qty-minus">−</button>
-                        <span class="px-4 fw-bold" id="detail-qty">1</span>
-                        <button class="btn btn-light px-3 py-2" id="qty-plus"
-                            data-max="{{ $product->stock_quantity }}">+</button>
+                <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                    <div class="qty-stepper">
+                        <button type="button" id="qty-minus" aria-label="Decrease quantity">−</button>
+                        <span class="value" id="detail-qty">1</span>
+                        <button type="button" id="qty-plus" data-max="{{ $product->stock_quantity }}" aria-label="Increase quantity">+</button>
                     </div>
-                    <button class="btn btn-primary btn-lg px-5 fw-bold flex-grow-1"
+                    <button class="btn btn-primary btn-lg flex-grow-1" style="min-width:200px;"
                         id="detail-add-cart" data-product-id="{{ $product->id }}">
                         <i class="bi bi-cart-plus me-2"></i>Add to Cart
                     </button>
@@ -133,37 +127,37 @@
                 @endif
 
                 <div class="d-flex gap-2 mb-4">
-                    <button class="btn btn-outline-danger wishlist-btn w-100"
+                    <button class="btn btn-outline-danger wishlist-btn flex-grow-1" id="detail-wishlist"
                         data-product-id="{{ $product->id }}">
-                        <i class="bi bi-heart me-2"></i>Add to Wishlist
+                        <i class="bi {{ $inWishlist ? 'bi-heart-fill' : 'bi-heart' }} me-2"></i>
+                        <span class="wishlist-label">{{ $inWishlist ? 'In Wishlist' : 'Add to Wishlist' }}</span>
                     </button>
                 </div>
 
+                {{-- Trust notes --}}
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="pay-chip"><i class="bi bi-truck"></i>Free delivery over PKR 5,000</span>
+                    <span class="pay-chip"><i class="bi bi-arrow-repeat"></i>7-day returns</span>
+                    <span class="pay-chip"><i class="bi bi-shield-check"></i>Secure checkout</span>
+                </div>
+
                 {{-- Product Details --}}
-                <div class="border-top pt-3">
-                    <div class="row g-2" style="font-size:13px;">
+                <div style="border-top:1px solid var(--line);padding-top:1.2rem;">
+                    <div class="meta-grid">
                         @if($product->brand)
-                        <div class="col-6">
-                            <span class="text-muted">Brand:</span>
-                            <span class="fw-semibold ms-1">{{ $product->brand->name }}</span>
-                        </div>
+                        <div><span class="k">Brand</span><span class="v">{{ $product->brand->name }}</span></div>
+                        @endif
+                        @if($product->category)
+                        <div><span class="k">Category</span><span class="v">{{ $product->category->name }}</span></div>
                         @endif
                         @if($product->weight)
-                        <div class="col-6">
-                            <span class="text-muted">Weight:</span>
-                            <span class="fw-semibold ms-1">{{ $product->weight }} kg</span>
-                        </div>
+                        <div><span class="k">Weight</span><span class="v">{{ $product->weight }} kg</span></div>
                         @endif
                         @if($product->dimensions)
-                        <div class="col-6">
-                            <span class="text-muted">Dimensions:</span>
-                            <span class="fw-semibold ms-1">{{ $product->dimensions }}</span>
-                        </div>
+                        <div><span class="k">Dimensions</span><span class="v">{{ $product->dimensions }}</span></div>
                         @endif
-                        <div class="col-6">
-                            <span class="text-muted">Views:</span>
-                            <span class="fw-semibold ms-1">{{ number_format($product->views_count) }}</span>
-                        </div>
+                        <div><span class="k">Views</span><span class="v">{{ number_format($product->views_count) }}</span></div>
+                        <div><span class="k">Availability</span><span class="v">{{ $product->stock_quantity > 0 ? 'In stock' : 'Out of stock' }}</span></div>
                     </div>
                 </div>
             </div>
@@ -171,13 +165,13 @@
     </div>
 
     {{-- Description & Reviews Tabs --}}
-    <div class="bg-white rounded-3 border mb-5">
-        <ul class="nav nav-tabs border-bottom px-3 pt-2">
+    <div class="panel mb-5">
+        <ul class="nav nav-tabs px-3 pt-2">
             <li class="nav-item">
-                <a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#description">Description</a>
+                <a class="nav-link active" data-bs-toggle="tab" href="#description">Description</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fw-semibold" data-bs-toggle="tab" href="#reviews">
+                <a class="nav-link" data-bs-toggle="tab" href="#reviews">
                     Reviews ({{ $product->reviews->count() }})
                 </a>
             </li>
@@ -187,9 +181,9 @@
             {{-- Description --}}
             <div class="tab-pane fade show active" id="description">
                 @if($product->description)
-                    <div style="font-size:14px;line-height:1.8;">{{ $product->description }}</div>
+                    <div style="font-size:.9rem;line-height:1.85;color:var(--muted);">{{ $product->description }}</div>
                 @else
-                    <p class="text-muted">No description available.</p>
+                    <p class="text-muted mb-0">No description available.</p>
                 @endif
             </div>
 
@@ -197,22 +191,23 @@
             <div class="tab-pane fade" id="reviews">
                 <div class="row g-4">
                     <div class="col-lg-4">
-                        <div class="text-center p-3 bg-light rounded-3">
-                            <div style="font-size:64px;font-weight:900;color:var(--primary);">{{ number_format($avg, 1) }}</div>
-                            <div class="mb-1">
+                        <div class="rating-summary">
+                            <div class="big">{{ number_format($avg, 1) }}</div>
+                            <div class="my-2">
                                 @for($i = 1; $i <= 5; $i++)
-                                    <i class="bi bi-star{{ $i <= $avg ? '-fill text-warning' : ' text-muted' }} fs-5"></i>
+                                    <i class="bi bi-star{{ $i <= $avg ? '-fill' : '' }}"
+                                       style="color:{{ $i <= $avg ? 'var(--accent)' : 'rgba(255,255,255,.16)' }};"></i>
                                 @endfor
                             </div>
-                            <div class="text-muted" style="font-size:13px;">{{ $product->reviews->count() }} reviews</div>
+                            <div class="text-muted" style="font-size:.78rem;">{{ $product->reviews->count() }} reviews</div>
                         </div>
 
                         {{-- Write Review --}}
                         @auth
-                        <div class="mt-3 p-3 border rounded-3">
+                        <div class="panel-soft p-3 mt-3">
                             <h6 class="fw-bold mb-3">Write a Review</h6>
                             <div class="mb-2">
-                                <label class="form-label fw-semibold" style="font-size:13px;">Rating *</label>
+                                <label class="form-label">Rating *</label>
                                 <div class="star-rating" id="star-rating">
                                     @for($i = 1; $i <= 5; $i++)
                                         <i class="bi bi-star fs-4 text-muted" data-rating="{{ $i }}"
@@ -234,7 +229,8 @@
                             <div id="review-result" class="mt-2"></div>
                         </div>
                         @else
-                        <div class="mt-3 p-3 border rounded-3 text-center">
+                        <div class="panel-soft p-3 mt-3 text-center">
+                            <p class="text-muted mb-2" style="font-size:.82rem;">Share your experience with this product</p>
                             <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
                                 Login to Write a Review
                             </a>
@@ -244,32 +240,33 @@
 
                     <div class="col-lg-8">
                         @forelse($product->reviews as $review)
-                        <div class="border-bottom pb-3 mb-3">
+                        <div class="review-item">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <div class="fw-semibold">{{ $review->user->name }}</div>
                                     <div>
                                         @for($i = 1; $i <= 5; $i++)
-                                            <i class="bi bi-star{{ $i <= $review->rating ? '-fill text-warning' : ' text-muted' }}"
-                                               style="font-size:13px;"></i>
+                                            <i class="bi bi-star{{ $i <= $review->rating ? '-fill' : '' }}"
+                                               style="font-size:.78rem;color:{{ $i <= $review->rating ? 'var(--accent)' : 'rgba(255,255,255,.16)' }};"></i>
                                         @endfor
                                     </div>
                                 </div>
-                                <div class="text-muted" style="font-size:12px;">
+                                <div class="text-muted" style="font-size:.72rem;">
                                     {{ $review->created_at->format('d M Y') }}
                                 </div>
                             </div>
                             @if($review->title)
-                            <div class="fw-semibold mt-1" style="font-size:14px;">{{ $review->title }}</div>
+                            <div class="fw-semibold mt-2" style="font-size:.88rem;">{{ $review->title }}</div>
                             @endif
                             @if($review->comment)
-                            <p class="text-muted mt-1 mb-0" style="font-size:13px;">{{ $review->comment }}</p>
+                            <p class="text-muted mt-1 mb-0" style="font-size:.84rem;line-height:1.7;">{{ $review->comment }}</p>
                             @endif
                         </div>
                         @empty
-                        <div class="text-center py-4 text-muted">
-                            <i class="bi bi-chat-square fs-1 d-block mb-2" style="color:#ddd;"></i>
-                            No reviews yet. Be the first to review!
+                        <div class="empty-state" style="padding:40px 20px;">
+                            <div class="icon" style="width:60px;height:60px;font-size:1.5rem;"><i class="bi bi-chat-square-text"></i></div>
+                            <h4 style="font-size:1rem;">No reviews yet</h4>
+                            <p class="mb-0" style="font-size:.84rem;">Be the first to review this product.</p>
                         </div>
                         @endforelse
                     </div>
@@ -281,8 +278,13 @@
     {{-- Related Products --}}
     @if($related->count())
     <div class="mb-4">
-        <h5 class="fw-bold mb-3">Related Products</h5>
-        <div class="row row-cols-2 row-cols-md-4 g-3">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">You may also like</div>
+                <h2 class="section-title">Related Products</h2>
+            </div>
+        </div>
+        <div class="row row-cols-2 row-cols-md-4 g-3 g-lg-4">
             @foreach($related as $rp)
             <div class="col">
                 <x-product-card :product="$rp" />
@@ -296,8 +298,8 @@
 
 {{-- Lightbox --}}
 <div id="lightbox" onclick="closeLightbox()"
-    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;cursor:zoom-out;align-items:center;justify-content:center;">
-    <img id="lightbox-img" style="max-width:90%;max-height:90vh;border-radius:8px;object-fit:contain;">
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;cursor:zoom-out;align-items:center;justify-content:center;">
+    <img id="lightbox-img" style="max-width:90%;max-height:90vh;border-radius:12px;object-fit:contain;">
 </div>
 @endsection
 
@@ -306,8 +308,8 @@
 // Image switcher
 function switchImage(el) {
     document.getElementById('main-product-img').src = el.src;
-    document.querySelectorAll('.thumb-img').forEach(t => t.style.borderColor = 'transparent');
-    el.style.borderColor = 'var(--primary)';
+    document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
 }
 
 // Lightbox
@@ -338,18 +340,28 @@ $('#detail-add-cart').on('click', function() {
 
     @auth
     btn.prop('disabled', true).html('<i class="bi bi-hourglass-split me-1"></i>Adding...');
-    $.post('{{ route("customer.cart.add") }}', { product_id: productId, quantity: qty }, function(res) {
-        if (res.success) {
-            $('#cart-count').text(res.cart_count);
-            showToast(res.message);
-            btn.html('<i class="bi bi-check-lg me-1"></i>Added to Cart!');
-            setTimeout(() => {
-                btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-2"></i>Add to Cart');
-            }, 2000);
-        } else {
-            showToast(res.message, 'error');
+    $.ajax({
+        url: '{{ route("customer.cart.add") }}',
+        method: 'POST',
+        data: { product_id: productId, quantity: qty },
+        dataType: 'json',
+        headers: { 'Accept': 'application/json' }
+    }).done(function(res) {
+        if (!res || !res.success) {
+            showToast((res && res.message) || 'Could not add to cart.', 'error');
             btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-2"></i>Add to Cart');
+            return;
         }
+
+        $('#cart-count').text(res.cart_count);
+        showToast(res.message);
+        btn.html('<i class="bi bi-check-lg me-1"></i>Added to Cart!');
+        setTimeout(() => {
+            btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-2"></i>Add to Cart');
+        }, 2000);
+    }).fail(function(xhr) {
+        btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-2"></i>Add to Cart');
+        handleAccountFailure(xhr, 'Could not add to cart. Please try again.');
     });
     @else
     showToast('Please login first.', 'error');

@@ -1,29 +1,45 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
+@section('title', 'Profile Settings — ShopZone')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('content')
+<div class="container py-4" style="max-width:880px;">
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+    <div class="page-head pt-0">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">Account</a></li>
+                <li class="breadcrumb-item active">Profile Settings</li>
+            </ol>
+        </nav>
+        <h1 class="page-title"><i class="bi bi-gear me-2"></i>Profile Settings</h1>
+        <p class="page-sub">Update your account details, password and preferences.</p>
+    </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
+    @if(session('status') === 'profile-updated')
+        <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i> Your profile has been updated.
+        </div>
+    @endif
+
+    @if(session('status') === 'password-updated')
+        <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-shield-check"></i> Your password has been updated.
+        </div>
+    @endif
+
+    <div class="row g-4">
+        <div class="col-12">
+            @include('profile.partials.update-profile-information-form')
+        </div>
+
+        <div class="col-12">
+            @include('profile.partials.update-password-form')
+        </div>
+
+        <div class="col-12">
+            @include('profile.partials.delete-user-form')
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

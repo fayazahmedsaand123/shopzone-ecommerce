@@ -21,7 +21,7 @@
                     @foreach($order->items as $item)
                     <tr>
                         <td width="60">
-                            <img src="{{ $item->product && $item->product->main_image ? asset('storage/'.$item->product->main_image) : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=60' }}"
+                            <img src="{{ $item->product ? $item->product->image_url : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=60' }}"
                                 width="50" height="50" class="rounded" style="object-fit:cover;">
                         </td>
                         <td>

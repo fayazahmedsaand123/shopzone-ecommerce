@@ -7,6 +7,8 @@ class Product extends Model {
     
     use HasFactory;
 
+    private const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80';
+
     protected $fillable = [
         'name','slug','sku','description','short_description',
         'category_id','brand_id','price','sale_price','stock_quantity',
@@ -61,5 +63,22 @@ class Product extends Model {
     // Check if in stock
     public function getInStockAttribute() {
         return $this->stock_quantity > 0;
+    }
+
+    // Resolve local storage paths and remote URLs to a usable image URL
+    public function getImageUrlAttribute(): string {
+        $path = $this->main_image;
+
+        if (!$path) {
+            return self::PLACEHOLDER_IMAGE;
+        }
+
+        if (str_starts_with($path, 'http')) {
+            return $path;
+        }
+
+        return is_file(public_path('storage/' . $path))
+            ? asset('storage/' . $path)
+            : self::PLACEHOLDER_IMAGE;
     }
 }

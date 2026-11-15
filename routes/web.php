@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\CouponController;
-use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
@@ -34,6 +33,17 @@ Route::post('/products/{product:slug}/review', [ProductController::class, 'revie
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+Route::post('/newsletter', function (Illuminate\Http\Request $request) {
+    $data = $request->validate(['email' => 'required|email|max:150']);
+    \App\Models\NewsletterSubscriber::updateOrCreate(
+        ['email' => $data['email']],
+        ['status' => 'active']
+    );
+
+    return back()->with('success', 'You are subscribed! Watch your inbox for exclusive deals.');
+})->name('newsletter.store');
+
 Route::get('/brands', [ProductController::class, 'brands'])->name('brands.index');
 Route::get('/best-sellers', [ProductController::class, 'bestSellers'])->name('best-sellers');
 Route::get('/new-arrivals', [ProductController::class, 'newArrivals'])->name('new-arrivals');
@@ -42,6 +52,13 @@ Route::get('/about', fn() => view('store.about'))->name('about');
 Route::get('/faq', fn() => view('store.faq'))->name('faq');
 
 require __DIR__.'/auth.php';
+
+// Shared post-auth landing target used by Breeze flows (verify email, password confirm)
+Route::get('/dashboard', function () {
+    return auth()->user()->isAdmin()
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('customer.dashboard');
+})->middleware('auth')->name('dashboard');
 
 // Customer 
 Route::middleware(['auth', 'customer'])->prefix('account')->name('customer.')->group(function () {
@@ -125,9 +142,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/coupons/{coupon}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
     Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
     Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
-
-    // Settings
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-    Route::post('/settings/email/add', [SettingsController::class, 'addEmail'])->name('settings.email.add');
-    Route::delete('/settings/email/remove', [SettingsController::class, 'removeEmail'])->name('settings.email.remove');
 });

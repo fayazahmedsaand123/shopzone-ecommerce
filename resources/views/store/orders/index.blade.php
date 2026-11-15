@@ -1,63 +1,76 @@
 @extends('layouts.app')
-@section('title', 'My Orders')
+@section('title', 'My Orders — ShopZone')
 
 @section('content')
 <div class="container py-4">
-    <h4 class="fw-bold mb-4"><i class="bi bi-bag me-2"></i>My Orders</h4>
+    <div class="page-head pt-0">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">Account</a></li>
+                <li class="breadcrumb-item active">My Orders</li>
+            </ol>
+        </nav>
+        <h1 class="page-title"><i class="bi bi-bag me-2"></i>My Orders</h1>
+        <p class="page-sub">Track and review all your ShopZone orders</p>
+    </div>
 
     @if($orders->count())
-    <div class="bg-white rounded-3 border overflow-hidden">
-        <table class="table align-middle mb-0">
-            <thead style="background:#f8f9fa;">
-                <tr>
-                    <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Order #</th>
-                    <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Date</th>
-                    <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Items</th>
-                    <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Total</th>
-                    <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Status</th>
-                    <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($orders as $order)
-                <tr>
-                    <td><strong>#{{ $order->order_number }}</strong></td>
-                    <td>{{ $order->created_at->format('d M Y') }}</td>
-                    <td>{{ $order->items()->count() }} items</td>
-                    <td class="fw-bold text-danger">PKR {{ number_format($order->total) }}</td>
-                    <td>
-                        @php
-                            $colors = [
-                                'pending'    => 'warning',
-                                'confirmed'  => 'info',
-                                'processing' => 'primary',
-                                'shipped'    => 'primary',
-                                'delivered'  => 'success',
-                                'cancelled'  => 'danger',
-                            ];
-                        @endphp
-                        <span class="badge bg-{{ $colors[$order->status] ?? 'secondary' }}">
-                            {{ ucfirst($order->status) }}
-                        </span>
-                    </td>
-                    <td>
-                        <a href="{{ route('customer.orders.show', $order->id) }}"
-                            class="btn btn-sm btn-outline-primary">
-                            View Details
-                        </a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="panel overflow-hidden">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($orders as $order)
+                    <tr>
+                        <td><strong>#{{ $order->order_number }}</strong></td>
+                        <td class="text-muted">{{ $order->created_at->format('d M Y') }}</td>
+                        <td class="text-muted">{{ $order->items()->count() }} items</td>
+                        <td class="fw-bold" style="color:var(--accent);">PKR {{ number_format($order->total) }}</td>
+                        <td>
+                            @php
+                                $colors = [
+                                    'pending'    => 'warning',
+                                    'confirmed'  => 'info',
+                                    'processing' => 'primary',
+                                    'shipped'    => 'primary',
+                                    'delivered'  => 'success',
+                                    'cancelled'  => 'danger',
+                                ];
+                            @endphp
+                            <span class="badge bg-{{ $colors[$order->status] ?? 'secondary' }}">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ route('customer.orders.show', $order->id) }}"
+                                class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="mt-3">{{ $orders->links() }}</div>
+    <div class="mt-4 d-flex justify-content-center">{{ $orders->links() }}</div>
 
     @else
-    <div class="text-center py-5 bg-white rounded-3 border">
-        <i class="bi bi-bag-x" style="font-size:64px;color:#ddd;"></i>
-        <h4 class="mt-3 text-muted">No orders yet</h4>
-        <a href="{{ route('products.index') }}" class="btn btn-primary px-5">Start Shopping</a>
+    <div class="empty-state">
+        <div class="icon"><i class="bi bi-bag-x"></i></div>
+        <h4>No orders yet</h4>
+        <p>When you place an order it will appear here.</p>
+        <a href="{{ route('products.index') }}" class="btn btn-primary px-5 mt-1">Start Shopping</a>
     </div>
     @endif
 </div>

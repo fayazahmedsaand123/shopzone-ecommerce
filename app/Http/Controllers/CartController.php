@@ -10,9 +10,13 @@ class CartController extends Controller {
 
     // Add to cart
     public function add(Request $request) {
-        $request->validate(['product_id' => 'required|exists:products,id']);
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity'   => 'nullable|integer|min:1|max:99',
+        ]);
 
-        $product = Product::findOrFail($request->product_id);
+        $quantity = (int) $request->input('quantity', 1);
+        $product  = Product::findOrFail($request->product_id);
 
         if ($product->stock_quantity <= 0) {
             return response()->json(['success' => false, 'message' => 'Product is out of stock.']);
@@ -22,24 +26,32 @@ class CartController extends Controller {
             ->where('product_id', $product->id)
             ->first();
 
+        $newQuantity = ($cart ? $cart->quantity : 0) + $quantity;
+
+        if ($newQuantity > $product->stock_quantity) {
+            return response()->json([
+                'success' => false,
+                'message' => "Only {$product->stock_quantity} unit(s) of '{$product->name}' available in stock.",
+            ]);
+        }
+
         if ($cart) {
-            if ($cart->quantity >= $product->stock_quantity) {
-                return response()->json(['success' => false, 'message' => 'Not enough stock available.']);
-            }
-            $cart->increment('quantity');
+            $cart->update(['quantity' => $newQuantity]);
         } else {
             Cart::create([
                 'user_id'    => auth()->id(),
                 'product_id' => $product->id,
-                'quantity'   => 1,
+                'quantity'   => $quantity,
             ]);
         }
 
         $count = Cart::where('user_id', auth()->id())->sum('quantity');
 
         return response()->json([
-            'success' => true,
-            'message' => 'Added to cart!',
+            'success'    => true,
+            'message'    => $quantity > 1
+                ? "{$quantity} × {$product->name} added to cart!"
+                : 'Added to cart!',
             'cart_count' => $count,
         ]);
     }

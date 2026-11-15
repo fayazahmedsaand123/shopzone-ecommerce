@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="bg-light rounded-3 p-4">
+            <div class="surface-soft rounded-3 p-4">
                 <label class="text-muted mb-2" style="font-size:12px;">MESSAGE</label>
                 <p class="mb-0" style="font-size:14px;line-height:1.8;">{{ $message->message }}</p>
             </div>

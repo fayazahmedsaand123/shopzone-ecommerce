@@ -1,13 +1,11 @@
 @props(['product'])
 
 @php
-    $image = $product->main_image
-        ? asset('storage/' . $product->main_image)
-        : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80';
     $currentPrice = $product->sale_price ?? $product->price;
     $discount = $product->sale_price
         ? round((($product->price - $product->sale_price) / $product->price) * 100)
         : 0;
+    $rating = round($product->average_rating, 1);
 @endphp
 
 <div class="product-card">
@@ -22,23 +20,23 @@
                 <span class="badge-featured">Featured</span>
             @endif
             @if($product->stock_quantity <= 0)
-                <span class="badge-out">Out of Stock</span>
+                <span class="badge-out">Out of stock</span>
             @endif
         </div>
 
         <a href="{{ route('products.show', $product->slug) }}">
-            <img src="{{ $image }}" alt="{{ $product->name }}" class="product-img" loading="lazy">
+            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-img" loading="lazy">
         </a>
 
         {{-- Hover Actions --}}
         <div class="product-actions">
-            <button class="action-btn wishlist-btn" title="Add to Wishlist"
+            <button class="action-btn wishlist-btn" title="Add to wishlist" aria-label="Add to wishlist"
                 data-product-id="{{ $product->id }}">
                 <i class="bi bi-heart"></i>
             </button>
-            <button class="action-btn" title="Quick View">
-                <i class="bi bi-eye"></i>
-            </button>
+            <a href="{{ route('products.show', $product->slug) }}" class="action-btn" title="View details" aria-label="View details">
+                <i class="bi bi-arrow-up-right"></i>
+            </a>
         </div>
     </div>
 
@@ -48,18 +46,20 @@
         @endif
 
         <h6 class="product-name">
-            <a href="{{ route('products.show', $product->slug) }}"
-            style="text-decoration:none;color:inherit;">
-                {{ Str::limit($product->name, 45) }}
+            <a href="{{ route('products.show', $product->slug) }}">
+                {{ Str::limit($product->name, 50) }}
             </a>
         </h6>
 
         {{-- Rating --}}
         <div class="product-rating">
-            @for($i = 1; $i <= 5; $i++)
-                <i class="bi bi-star{{ $i <= round($product->average_rating) ? '-fill text-warning' : ' text-muted' }}"
-                   style="font-size:12px;"></i>
-            @endfor
+            <span class="d-inline-flex align-items-center" style="gap:1px;">
+                @for($i = 1; $i <= 5; $i++)
+                    <i class="bi bi-star{{ $i <= round($rating) ? '-fill' : '' }}"
+                       style="color:{{ $i <= round($rating) ? 'var(--accent)' : 'rgba(255,255,255,.16)' }};"></i>
+                @endfor
+            </span>
+            <span>{{ $rating > 0 ? number_format($rating, 1) : 'New' }}</span>
         </div>
 
         {{-- Price --}}
@@ -70,11 +70,11 @@
             @endif
         </div>
 
-        {{-- Single Add to Cart Button --}}
+        {{-- Add to Cart --}}
         <button class="btn-add-cart {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}"
             data-product-id="{{ $product->id }}"
             {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}>
-            <i class="bi bi-cart-plus me-1"></i>
+            <i class="bi bi-cart-plus"></i>
             {{ $product->stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock' }}
         </button>
     </div>

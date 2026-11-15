@@ -2,74 +2,82 @@
 @section('title', 'About Us — ShopZone')
 
 @section('content')
-<div class="container py-5">
-
-    {{-- Hero --}}
-    <div class="row align-items-center mb-5 g-4">
+<div class="container">
+    <div class="about-hero row align-items-center g-5">
         <div class="col-lg-6">
-            <div class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2">About ShopZone</div>
-            <h2 class="fw-bold display-6">Pakistan's Most Trusted Online Shopping Destination</h2>
-            <p class="text-muted mt-3" style="font-size:15px;line-height:1.8;">
-                ShopZone was founded with a simple mission — to make quality products accessible
-                to everyone across Pakistan at fair prices, with fast and reliable delivery.
+            <span class="eyebrow"><i class="bi bi-stars"></i>About ShopZone</span>
+            <h1 class="section-title mt-3">Pakistan's most trusted online shopping destination</h1>
+            <p class="about-lead mt-3">
+                We started ShopZone with one simple goal — make quality products accessible to everyone
+                across Pakistan at fair prices, backed by fast and reliable delivery.
             </p>
-            <p class="text-muted" style="font-size:15px;line-height:1.8;">
-                From electronics to fashion, home essentials to sports equipment, we bring
-                you thousands of products from trusted brands, all in one place.
+            <p class="text-muted">
+                From electronics to fashion, home essentials to sports equipment, we bring you
+                hundreds of products from trusted brands, all in one place.
             </p>
-            <a href="{{ route('products.index') }}" class="btn btn-primary px-5 mt-2">
-                <i class="bi bi-bag me-2"></i>Shop Now
-            </a>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-bag me-2"></i>Shop Now
+                </a>
+                <a href="{{ route('contact') }}" class="btn btn-outline-light btn-lg">Talk to us</a>
+            </div>
         </div>
         <div class="col-lg-6">
             <div class="row g-3">
-                <div class="col-6">
-                    <div class="bg-primary bg-opacity-10 rounded-3 p-4 text-center">
-                        <div class="fw-bold fs-1 text-primary">10K+</div>
-                        <div class="text-muted" style="font-size:13px;">Products</div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="bg-success bg-opacity-10 rounded-3 p-4 text-center">
-                        <div class="fw-bold fs-1 text-success">50K+</div>
-                        <div class="text-muted" style="font-size:13px;">Happy Customers</div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="bg-warning bg-opacity-10 rounded-3 p-4 text-center">
-                        <div class="fw-bold fs-1 text-warning">100+</div>
-                        <div class="text-muted" style="font-size:13px;">Brands</div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="bg-danger bg-opacity-10 rounded-3 p-4 text-center">
-                        <div class="fw-bold fs-1 text-danger">5★</div>
-                        <div class="text-muted" style="font-size:13px;">Rating</div>
-                    </div>
-                </div>
+                <div class="col-6"><div class="stat-card"><div class="num">10K+</div><div class="lbl">Products</div></div></div>
+                <div class="col-6"><div class="stat-card"><div class="num">50K+</div><div class="lbl">Happy customers</div></div></div>
+                <div class="col-6"><div class="stat-card"><div class="num">100+</div><div class="lbl">Brands</div></div></div>
+                <div class="col-6"><div class="stat-card"><div class="num">4.8</div><div class="lbl">Average rating</div></div></div>
             </div>
         </div>
     </div>
 
-    {{-- Values --}}
-    <div class="row g-4 mb-5">
-        <div class="col-12 text-center mb-2">
-            <h3 class="fw-bold">Why Choose ShopZone?</h3>
-        </div>
-        @foreach([
-            ['bi-shield-check','text-primary','100% Genuine Products','We only sell authentic products from verified suppliers and official brand distributors.'],
-            ['bi-truck','text-success','Fast Delivery','We deliver across Pakistan within 2-5 business days with real-time order tracking.'],
-            ['bi-headset','text-warning','24/7 Customer Support','Our support team is always available to help you with any questions or issues.'],
-            ['bi-arrow-repeat','text-danger','Easy Returns','Not satisfied? Return within 7 days for a full refund, no questions asked.'],
-        ] as $val)
-        <div class="col-md-6 col-lg-3">
-            <div class="bg-white rounded-3 border p-4 text-center h-100">
-                <i class="bi {{ $val[0] }} {{ $val[1] }}" style="font-size:40px;"></i>
-                <h6 class="fw-bold mt-3 mb-2">{{ $val[2] }}</h6>
-                <p class="text-muted mb-0" style="font-size:13px;">{{ $val[3] }}</p>
+    <div class="section-block">
+        <div class="section-head">
+            <div>
+                <span class="eyebrow"><i class="bi bi-patch-check"></i>Our promise</span>
+                <h2 class="section-title">Why shop with us</h2>
             </div>
         </div>
-        @endforeach
+        <div class="row g-3">
+            @foreach([
+                ['bi-shield-check','100% genuine products','We only sell authentic items sourced from verified suppliers and official brand distributors.'],
+                ['bi-truck','Fast nationwide delivery','Orders reach you within 2–5 business days, with real-time tracking on every shipment.'],
+                ['bi-headset','Support that cares','Our team is available six days a week to help with orders, returns and product questions.'],
+                ['bi-arrow-repeat','Easy 7-day returns','Not happy with an item? Return it within 7 days for a refund, no complicated forms.'],
+            ] as $value)
+                <div class="col-md-6 col-xl-3">
+                    <div class="value-card">
+                        <div class="icon"><i class="bi {{ $value[0] }}"></i></div>
+                        <h3 class="h6 fw-bold mb-2">{{ $value[1] }}</h3>
+                        <p class="text-muted mb-0 small">{{ $value[2] }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="panel panel-pad my-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <span class="eyebrow"><i class="bi bi-geo-alt"></i>Made in Pakistan</span>
+                <h2 class="section-title mt-2">Built by a small team in Hyderabad</h2>
+                <p class="text-muted mb-0">
+                    ShopZone is run by a dedicated team that handles everything from product sourcing
+                    to packing and customer care. Every order is checked by hand before it leaves our warehouse.
+                </p>
+            </div>
+            <div class="col-lg-5">
+                <div class="d-flex flex-column gap-2">
+                    <a href="{{ route('faq') }}" class="btn btn-outline-light text-start">
+                        <i class="bi bi-question-circle me-2"></i>Read our FAQ
+                    </a>
+                    <a href="{{ route('contact') }}" class="btn btn-outline-light text-start">
+                        <i class="bi bi-envelope me-2"></i>Contact the team
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

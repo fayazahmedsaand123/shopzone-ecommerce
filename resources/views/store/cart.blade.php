@@ -3,73 +3,87 @@
 
 @section('content')
 <div class="container py-4">
-    <h4 class="fw-bold mb-4"><i class="bi bi-cart3 me-2"></i>Shopping Cart</h4>
+    <div class="page-head pt-0">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item active">Shopping Cart</li>
+            </ol>
+        </nav>
+        <h1 class="page-title"><i class="bi bi-cart3 me-2"></i>Shopping Cart</h1>
+        <p class="page-sub">{{ $items->sum('quantity') }} {{ Str::plural('item', $items->sum('quantity')) }} in your cart</p>
+    </div>
 
     @if($items->count())
     <div class="row g-4">
 
         {{-- Cart Items --}}
         <div class="col-lg-8">
-            <div class="bg-white rounded-3 border overflow-hidden">
-                <table class="table align-middle mb-0" id="cart-table">
-                    <thead style="background:#f8f9fa;">
-                        <tr>
-                            <th style="font-size:12px;text-transform:uppercase;color:#6c757d;" colspan="2">Product</th>
-                            <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Price</th>
-                            <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Quantity</th>
-                            <th style="font-size:12px;text-transform:uppercase;color:#6c757d;">Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($items as $item)
-                        @php
-                            $price = $item->product->sale_price ?? $item->product->price;
-                            $total = $price * $item->quantity;
-                        @endphp
-                        <tr id="cart-row-{{ $item->id }}">
-                            <td width="70">
-                                <img src="{{ $item->product->main_image ? asset('storage/'.$item->product->main_image) : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80' }}"
-                                    width="60" height="60" class="rounded" style="object-fit:cover;">
-                            </td>
-                            <td>
-                                <div class="fw-semibold" style="font-size:14px;">{{ $item->product->name }}</div>
-                                <div class="text-muted" style="font-size:12px;">{{ $item->product->category->name ?? '' }}</div>
-                            </td>
-                            <td>
-                                <span class="fw-bold text-danger">PKR {{ number_format($price) }}</span>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2" style="width:120px;">
-                                    <button class="btn btn-sm btn-outline-secondary qty-btn"
-                                        data-cart-id="{{ $item->id }}"
-                                        data-action="decrease">−</button>
-                                    <span class="fw-bold cart-qty" id="qty-{{ $item->id }}">{{ $item->quantity }}</span>
-                                    <button class="btn btn-sm btn-outline-secondary qty-btn"
-                                        data-cart-id="{{ $item->id }}"
-                                        data-action="increase"
-                                        data-max="{{ $item->product->stock_quantity }}">+</button>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-bold" id="item-total-{{ $item->id }}">
-                                    PKR {{ number_format($total) }}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-danger remove-btn"
-                                    data-cart-id="{{ $item->id }}">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="panel overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table align-middle" id="cart-table">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($items as $item)
+                            @php
+                                $price = $item->product->sale_price ?? $item->product->price;
+                                $total = $price * $item->quantity;
+                            @endphp
+                            <tr id="cart-row-{{ $item->id }}">
+                                <td style="width:84px;">
+                                    <img src="{{ $item->product->image_url }}"
+                                        alt="{{ $item->product->name }}" class="cart-thumb">
+                                </td>
+                                <td>
+                                    <a href="{{ route('products.show', $item->product->slug) }}"
+                                       class="fw-semibold" style="font-size:.88rem;color:var(--text);">
+                                        {{ $item->product->name }}
+                                    </a>
+                                    <div class="text-muted" style="font-size:.74rem;">{{ $item->product->category->name ?? '' }}</div>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold" style="color:var(--accent);">PKR {{ number_format($price) }}</span>
+                                </td>
+                                <td>
+                                    <div class="qty-stepper">
+                                        <button type="button" class="qty-btn"
+                                            data-cart-id="{{ $item->id }}"
+                                            data-action="decrease">−</button>
+                                        <span class="value cart-qty" id="qty-{{ $item->id }}">{{ $item->quantity }}</span>
+                                        <button type="button" class="qty-btn"
+                                            data-cart-id="{{ $item->id }}"
+                                            data-action="increase"
+                                            data-max="{{ $item->product->stock_quantity }}">+</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-bold" id="item-total-{{ $item->id }}">
+                                        PKR {{ number_format($total) }}
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-danger remove-btn"
+                                        data-cart-id="{{ $item->id }}" title="Remove item">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="mt-3">
-                <a href="{{ route('products.index') }}" class="btn btn-outline-primary">
+                <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i>Continue Shopping
                 </a>
             </div>
@@ -77,35 +91,36 @@
 
         {{-- Order Summary --}}
         <div class="col-lg-4">
-            <div class="bg-white rounded-3 border p-4">
-                <h6 class="fw-bold mb-3 pb-2 border-bottom">Order Summary</h6>
+            <div class="panel panel-pad sticky-top" style="top:110px;">
+                <h6 class="panel-title mb-3 pb-3" style="border-bottom:1px solid var(--line);">
+                    <i class="bi bi-receipt"></i>Order Summary
+                </h6>
 
-                <div class="d-flex justify-content-between mb-2" style="font-size:14px;">
-                    <span class="text-muted">Subtotal</span>
-                    <span class="fw-semibold" id="cart-subtotal">PKR {{ number_format($subtotal) }}</span>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span class="v" id="cart-subtotal">PKR {{ number_format($subtotal) }}</span>
                 </div>
-                <div class="d-flex justify-content-between mb-2" style="font-size:14px;">
-                    <span class="text-muted">Shipping</span>
-                    <span class="text-success fw-semibold">
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span class="v {{ $subtotal >= 5000 ? 'text-success' : '' }}" id="cart-shipping">
                         {{ $subtotal >= 5000 ? 'FREE' : 'PKR 200' }}
                     </span>
                 </div>
-                <hr>
-                <div class="d-flex justify-content-between mb-3">
-                    <span class="fw-bold">Total</span>
-                    <span class="fw-bold text-danger fs-5" id="cart-total">
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span class="v" id="cart-total">
                         PKR {{ number_format($subtotal >= 5000 ? $subtotal : $subtotal + 200) }}
                     </span>
                 </div>
 
-                <a href="{{ route('customer.checkout') }}" class="btn btn-primary w-100 btn-lg fw-bold">
+                <a href="{{ route('customer.checkout') }}" class="btn btn-primary w-100 btn-lg mt-4">
                     <i class="bi bi-lock me-2"></i>Proceed to Checkout
                 </a>
 
                 <div class="text-center mt-3">
-                    <small class="text-muted">
+                    <small class="text-muted" style="font-size:.74rem;">
                         <i class="bi bi-shield-check text-success me-1"></i>
-                        Secure SSL encrypted payment
+                        Secure SSL encrypted checkout
                     </small>
                 </div>
             </div>
@@ -114,11 +129,11 @@
 
     @else
     {{-- Empty Cart --}}
-    <div class="text-center py-5 bg-white rounded-3 border">
-        <i class="bi bi-cart-x" style="font-size:64px;color:#ddd;"></i>
-        <h4 class="mt-3 text-muted">Your cart is empty</h4>
-        <p class="text-muted">Looks like you haven't added anything yet.</p>
-        <a href="{{ route('products.index') }}" class="btn btn-primary px-5">
+    <div class="empty-state">
+        <div class="icon"><i class="bi bi-cart-x"></i></div>
+        <h4>Your cart is empty</h4>
+        <p>Looks like you haven't added anything yet.</p>
+        <a href="{{ route('products.index') }}" class="btn btn-primary px-5 mt-1">
             <i class="bi bi-bag me-2"></i>Start Shopping
         </a>
     </div>
@@ -128,6 +143,16 @@
 
 @push('scripts')
 <script>
+    function refreshCartSummary(subtotalText) {
+        const value = parseInt(String(subtotalText).replace(/[^\d]/g, ''), 10) || 0;
+        const freeShipping = value >= 5000;
+
+        $('#cart-shipping')
+            .text(freeShipping ? 'FREE' : 'PKR 200')
+            .toggleClass('text-success', freeShipping);
+        $('#cart-total').text('PKR ' + (freeShipping ? value : value + 200).toLocaleString('en-US'));
+    }
+
     // Quantity update
     $(document).on('click', '.qty-btn', function () {
         const cartId = $(this).data('cart-id');
@@ -152,6 +177,7 @@
                     $('#qty-' + cartId).text(qty);
                     $('#item-total-' + cartId).text(res.item_total);
                     $('#cart-subtotal').text(res.subtotal);
+                    refreshCartSummary(res.subtotal);
                     $('#cart-count').text(res.cart_count);
                 } else {
                     showToast(res.message, 'error');
@@ -177,6 +203,7 @@
                         }
                     });
                     $('#cart-subtotal').text(res.subtotal);
+                    refreshCartSummary(res.subtotal);
                     $('#cart-count').text(res.cart_count);
                     showToast(res.message);
                 }

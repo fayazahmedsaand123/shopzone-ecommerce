@@ -12,7 +12,7 @@ class HomeController extends Controller {
             ->whereNull('parent_id')
             ->withCount('products')
             ->orderBy('sort_order')
-            ->take(8)
+            ->take(12)
             ->get();
 
         $featured_products = Product::with(['category', 'brand'])
@@ -36,12 +36,29 @@ class HomeController extends Controller {
 
         $brands = Brand::where('status', 'active')->take(8)->get();
 
+        $hero_product = Product::with('category')
+            ->where('status', 'active')
+            ->where('is_featured', true)
+            ->whereHas('category', fn ($q) => $q->whereIn('slug', [
+                'laptops-computers', 'mobile-phones', 'electronics', 'cameras', 'audio',
+            ]))
+            ->orderByDesc('price')
+            ->first();
+
+        $stats = [
+            'products'   => Product::where('status', 'active')->count(),
+            'brands'     => Brand::where('status', 'active')->count(),
+            'categories' => Category::where('status', 'active')->count(),
+        ];
+
         return view('store.home', compact(
             'categories',
             'featured_products',
             'new_arrivals',
             'best_sellers',
-            'brands'
+            'brands',
+            'hero_product',
+            'stats'
         ));
     }
 }

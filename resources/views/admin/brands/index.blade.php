@@ -28,7 +28,7 @@
                     @if($brand->logo)
                         <img src="{{ asset('storage/'.$brand->logo) }}" width="44" height="44" class="rounded" style="object-fit:contain;">
                     @else
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
+                        <div class="surface-soft rounded d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
                             <i class="bi bi-award text-muted"></i>
                         </div>
                     @endif

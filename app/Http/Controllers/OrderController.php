@@ -14,6 +14,7 @@ use App\Mail\OrderConfirmationMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 
@@ -155,21 +156,23 @@ class OrderController extends Controller {
             DB::commit();
 
             try {
-                $order->load('items');
+                $order->load('items', 'user');
 
-                // Send confirmation to customer
-                Mail::to($request->email)->send(new OrderConfirmationMail($order));
-
-                // Get notification emails from database settings
-                $saved     = \App\Models\StoreSetting::get('notification_emails', '');
-                $notifyEmails = array_values(array_filter(array_map('trim', explode(',', $saved))));
-
-                if (!empty($notifyEmails)) {
-                    Mail::to($notifyEmails)->send(new NewOrderAdminMail($order));
+                // Send confirmation to the customer only
+                try {
+                    Mail::to($request->email)->send(new OrderConfirmationMail($order));
+                } catch (\Throwable $e) {
+                    Log::error('Order confirmation email failed', [
+                        'order' => $order->order_number,
+                        'email' => $request->email,
+                        'error' => $e->getMessage(),
+                    ]);
                 }
-
-            } catch (\Exception $e) {
-                // Silent fail
+            } catch (\Throwable $e) {
+                Log::error('Order email dispatch failed', [
+                    'order' => $order->order_number,
+                    'error' => $e->getMessage(),
+                ]);
             }
 
             return redirect()->route('customer.orders.show', $order->id)
